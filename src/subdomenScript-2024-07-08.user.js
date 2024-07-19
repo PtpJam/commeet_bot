@@ -44,9 +44,12 @@
         let pswInput = document.querySelectorAll('input[type="password"]')[1];
         let submitBtn = document.querySelectorAll("button[class='ui-simple-button color-blue size-46']")[1];
 
+        let username = localStorage.getItem('username');
+        let password = localStorage.getItem('password');
+        
         if (loginInput && pswInput && submitBtn) {
-            loginInput.value = "valeria2109aaa@gmail.com";
-            pswInput.value = "Valeria2109";
+            loginInput.value = username;
+            pswInput.value = password;
             const inputEvent = new Event('input', { bubbles: true });
             loginInput.dispatchEvent(inputEvent);
             pswInput.dispatchEvent(inputEvent);
