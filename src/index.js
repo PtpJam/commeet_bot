@@ -100,13 +100,9 @@ async function runSelenium(username, password) {
         await driver.executeScript(`
             localStorage.setItem('username', '${username}');
             localStorage.setItem('password', '${password}');
+            localStorage.setItem('ip', '${ipAddress}');
         `);
         await driver.get("https://coomeet.com/");
-        setInterval(async () => {
-            await axios.post('http://localhost:3000/activity-time', {
-                ip: ipAddress
-            });
-        }, 60000);
     } catch (error) {
         console.log(error);
     }

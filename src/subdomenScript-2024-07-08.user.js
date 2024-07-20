@@ -76,4 +76,108 @@
 
     let hideElementsObserver = new MutationObserver(hideElements);
     hideElementsObserver.observe(document.body, { childList: true, subtree: true });
+
+
+    let isOnline = true;
+    let lastActivityTime = Date.now();
+    let lastActivityDuration = 0;
+
+    let ip = localStorage.getItem('ip');
+    let activityData = {
+        lastActivityTime,
+        lastActivityDuration,
+        isOnline
+    };
+
+    function calculateActiveDuration() {
+        if (isOnline) {
+            const currentTime = Date.now();
+            const timeDiff = (currentTime - lastActivityTime) / 1000;
+            lastActivityDuration += timeDiff;
+            lastActivityTime = currentTime;
+        }
+    }
+
+    function updateLastActiveTime() {
+        lastActivityTime = Date.now();
+    }
+    function handleVisibilityChange() {
+        if (document.hidden) {
+            calculateActiveDuration();
+            isOnline = false;
+        } else {
+            lastActivityTime = Date.now();
+            isOnline = true;
+        }
+    }
+
+    function sendActivityData() {
+        calculateActiveDuration();
+        activityData.lastActivityDuration = lastActivityDuration;
+        activityData.isOnline = isOnline;
+        activityData.lastActivityTime = lastActivityTime;
+
+        console.log(activityData);
+
+        const apiUrl = `http://localhost:3000/activity/${ip}`;
+        fetch(apiUrl, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(activityData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Activity data sent successfully:', data);
+        })
+        .catch((error) => {
+            console.error('Error sending activity data:', error);
+        });
+    }
+    function handleWindowBlur() {
+        calculateActiveDuration();
+        isOnline = false;
+    }
+
+    function handleWindowFocus() {
+        lastActivityTime = Date.now();
+        isOnline = true;
+    }
+
+
+    window.addEventListener('mousemove', calculateActiveDuration);
+    window.addEventListener('keydown', calculateActiveDuration);
+    window.addEventListener('scroll', calculateActiveDuration);
+    window.addEventListener('click', calculateActiveDuration);
+
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('blur', handleWindowBlur);
+    window.addEventListener('focus', handleWindowFocus);
+
+    setInterval(sendActivityData, 60000);
+
+    window.addEventListener('beforeunload', () => {
+        calculateActiveDuration();
+        activityData.lastActivityDuration = lastActivityDuration;
+        activityData.isOnline = false;
+        activityData.lastActivityTime = lastActivityTime;
+        const apiUrl = `http://localhost:3000/activity/${ip}`;
+        fetch(apiUrl, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(activityData),
+            keepalive: true
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Activity data sent successfully:', data);
+        })
+        .catch((error) => {
+            console.error('Error sending activity data:', error);
+        });
+    });
 })();
