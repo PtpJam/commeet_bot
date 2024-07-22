@@ -110,7 +110,7 @@ async function runSelenium(username, password) {
 
 async function checkIP(ip) {
     try {
-        const result = await axios.post('http://localhost:3000/check-ip', {
+        const result = await axios.post('https://commeet-admin-panel-2720a2a2defe.herokuapp.com/check-ip', {
             ip
         });
 

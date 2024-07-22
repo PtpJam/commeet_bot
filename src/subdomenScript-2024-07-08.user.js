@@ -119,7 +119,7 @@
 
         console.log(activityData);
 
-        const apiUrl = `http://localhost:3000/activity/${ip}`;
+        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/${ip}`;
         fetch(apiUrl, {
             method: 'PATCH',
             headers: {
@@ -163,7 +163,7 @@
         activityData.lastActivityDuration = lastActivityDuration;
         activityData.isOnline = false;
         activityData.lastActivityTime = lastActivityTime;
-        const apiUrl = `http://localhost:3000/activity/${ip}`;
+        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/${ip}`;
         fetch(apiUrl, {
             method: 'PATCH',
             headers: {
