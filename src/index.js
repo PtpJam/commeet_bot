@@ -3,22 +3,9 @@ import { By, Builder, until, Browser } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js';
 import axios from 'axios';
 
-import os from 'os';
 
-function getLocalIpAddress() {
-  const networkInterfaces = os.networkInterfaces();
-  for (const interfaceName in networkInterfaces) {
-    const addresses = networkInterfaces[interfaceName];
-    for (const address of addresses) {
-      if (address.family === 'IPv4' && !address.internal) {
-        return address.address;
-      }
-    }
-  }
-  return 'IP address not found';
-}
-
-const ipAddress = getLocalIpAddress();
+const response = await axios.get('https://api.ipify.org?format=json');
+const ipAddress = response.data.ip;
 console.log(`Local IP address: ${ipAddress}`);
 
 async function runSelenium(username, password) {
