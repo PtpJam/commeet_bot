@@ -82,7 +82,7 @@
     let lastActivityTime = Date.now();
     let lastActivityDuration = 0;
 
-    let ip = localStorage.getItem('ip');
+    let winUsername = localStorage.getItem('winUsername');
     let activityData = {
         lastActivityTime,
         lastActivityDuration,
@@ -119,7 +119,7 @@
 
         console.log(activityData);
 
-        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/${ip}`;
+        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/${winUsername}`;
         fetch(apiUrl, {
             method: 'PATCH',
             headers: {
@@ -156,14 +156,14 @@
     window.addEventListener('blur', handleWindowBlur);
     window.addEventListener('focus', handleWindowFocus);
 
-    setInterval(sendActivityData, 60000);
+    setInterval(sendActivityData, 20000);
 
     window.addEventListener('beforeunload', () => {
         calculateActiveDuration();
         activityData.lastActivityDuration = lastActivityDuration;
         activityData.isOnline = false;
         activityData.lastActivityTime = lastActivityTime;
-        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/${ip}`;
+        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/${winUsername}`;
         fetch(apiUrl, {
             method: 'PATCH',
             headers: {

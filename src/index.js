@@ -2,11 +2,11 @@ import path from 'path';
 import { By, Builder, until, Browser } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js';
 import axios from 'axios';
+import os from 'os'
 
+const localUsername = os.userInfo().username;
+console.log(`Local username: ${localUsername}`);
 
-const response = await axios.get('https://api.ipify.org?format=json');
-const ipAddress = response.data.ip;
-console.log(`Local IP address: ${ipAddress}`);
 
 async function runSelenium(username, password) {
     try {
@@ -51,15 +51,17 @@ async function runSelenium(username, password) {
         let importBtn = await driver.wait(until.elementLocated(By.id("input_ZmlsZV91dGlscw_file")), 10000);
         await importBtn.sendKeys(mainScriptPath);
     
-        await driver.executeScript(`document.body.style.opacity = '0';`);
-        
+        handles = await driver.getAllWindowHandles();
+        while (!handles[1]) {
+            await driver.sleep(100);
+            handles = await driver.getAllWindowHandles();
+        }
         
         handles = await driver.getAllWindowHandles();
         await driver.switchTo().window(handles[1]);
     
         
         let installBtn = await driver.wait(until.elementLocated(By.className("button install")), 10000);
-        await driver.executeScript(`document.body.style.opacity = '0';`);
         await installBtn.click();
     
         handles = await driver.getAllWindowHandles();
@@ -67,14 +69,20 @@ async function runSelenium(username, password) {
     
         await importBtn.sendKeys(subdomenScriptPath);
 
-        await driver.executeScript(`document.body.style.opacity = '0';`);
+        
     
         await driver.sleep(2000);
+
+        handles = await driver.getAllWindowHandles();
+        while (!handles[1]) {
+            await driver.sleep(100);
+            handles = await driver.getAllWindowHandles();
+        }
     
         handles = await driver.getAllWindowHandles();
         await driver.switchTo().window(handles[1]);
     
-        await driver.executeScript(`document.body.style.opacity = '0';`);
+        
     
         let installBtn2 = await driver.wait(until.elementLocated(By.className("button install")), 10000);
         await installBtn2.click();
@@ -87,7 +95,7 @@ async function runSelenium(username, password) {
         await driver.executeScript(`
             localStorage.setItem('username', '${username}');
             localStorage.setItem('password', '${password}');
-            localStorage.setItem('ip', '${ipAddress}');
+            localStorage.setItem('winUsername', '${localUsername}');
         `);
         await driver.get("https://coomeet.com/");
     } catch (error) {
@@ -95,17 +103,15 @@ async function runSelenium(username, password) {
     }
 }
 
-async function checkIP(ip) {
+async function checkUsername(localUsername) {
     try {
-        const result = await axios.post('https://commeet-admin-panel-2720a2a2defe.herokuapp.com/check-ip', {
-            ip
-        });
+        const result = await axios.get(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/${localUsername}`);
 
         await runSelenium(result.data.username, result.data.password);
     } catch (error) {
         if (error.response) {
             if (error.response.status === 404)
-                console.log("ERROR, IP is not allowed");
+                console.log("ERROR, username is not allowed");
             else 
                 console.log("Error data", error.response.data);
         }
@@ -118,4 +124,4 @@ async function checkIP(ip) {
     }
 }
 
-await checkIP(ipAddress);
+await checkUsername(localUsername);
