@@ -3,10 +3,27 @@ import { By, Builder, until, Browser } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js';
 import axios from 'axios';
 import os from 'os'
+import simpleGit from 'simple-git';
 
 const localUsername = os.userInfo().username;
-console.log(`Try update. Local username: ${localUsername}`);
+console.log(`Local username: ${localUsername}`);
 
+const git = simpleGit();
+
+async function updateScript() {
+    try {
+        // Выполняем git pull для получения последних изменений
+        const update = await git.pull();
+        if (update && update.summary.changes) {
+            console.log('Скрипт обновлен, перезапуск...');
+            process.exit(1); // Перезапуск процесса для применения изменений
+        } else {
+            console.log('Нет обновлений.');
+        }
+    } catch (err) {
+        console.error('Ошибка при обновлении скрипта:', err);
+    }
+}
 
 async function runSelenium(username, password) {
     try {
@@ -124,4 +141,5 @@ async function checkUsername(localUsername) {
     }
 }
 
+await updateScript();
 await checkUsername(localUsername);
