@@ -6,7 +6,7 @@ import os from 'os'
 import simpleGit from 'simple-git';
 
 const localUsername = os.userInfo().username;
-console.log(`Local username: ${localUsername}`);
+console.log(`Autoupdate, he-he-he. Local username: ${localUsername}`);
 
 const git = simpleGit();
 
