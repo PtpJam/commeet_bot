@@ -5,7 +5,7 @@ import axios from 'axios';
 import os from 'os'
 
 const localUsername = os.userInfo().username;
-console.log(`Local username: ${localUsername}`);
+console.log(`Try update. Local username: ${localUsername}`);
 
 
 async function runSelenium(username, password) {
