@@ -5,9 +5,6 @@ import axios from 'axios';
 import os from 'os'
 import simpleGit from 'simple-git';
 
-const localUsername = os.userInfo().username;
-console.log(`Local username: ${localUsername}`);
-
 const git = simpleGit();
 
 async function updateScript() {
@@ -16,7 +13,7 @@ async function updateScript() {
         const update = await git.pull();
         if (update && update.summary.changes) {
             console.log('Script is updated');
-            process.exit(1); // Перезапуск процесса для применения изменений
+            process.exit(0); // Перезапуск процесса для применения изменений
         } else {
             console.log('No updates');
         }
@@ -142,4 +139,7 @@ async function checkUsername(localUsername) {
 }
 
 await updateScript();
+
+const localUsername = os.userInfo().username;
+console.log(`Local username: ${localUsername}`);
 await checkUsername(localUsername);
