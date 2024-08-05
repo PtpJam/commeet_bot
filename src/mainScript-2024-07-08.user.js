@@ -11,10 +11,14 @@
 
 (function() {
     'use strict';
-    let startAppBtn = document.querySelector("button#open-app");
-    if (startAppBtn) {
-        startAppBtn.click();
+    const clickButton = () => {
+        let startAppBtn = document.querySelector("button#open-app");
+        if (startAppBtn) {
+            startAppBtn.click();
+        }
     }
+    let clickButtonObserver = new MutationObserver(clickButton);
+    clickButtonObserver.observe(document.body, { childList: true, subtree: true });
     let header = document.querySelector('header[class="header"]');
     header.innerHTML = "";
     let section = document.querySelector('section[class="section-item --about"]');
