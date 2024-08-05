@@ -74,9 +74,7 @@ async function runSelenium(username, password) {
         handles = await driver.getAllWindowHandles();
         await driver.switchTo().window(handles[1]);
     
-        //let code = await driver.findElement(By.className("tv_content tv_content_alt"));
-        // console.log("code", code);
-        // await driver.executeScript("arguments[0].style.opacity = '0';");
+        
         await driver.executeScript(`
             let code = document.querySelector('.tv_content .tv_content_alt');
             code.style.opacity = 0;
@@ -91,6 +89,8 @@ async function runSelenium(username, password) {
     
         handles = await driver.getAllWindowHandles();
         await driver.switchTo().window(handles[0]);
+
+        await driver.sleep(1000);
     
         await importBtn.sendKeys(subdomenScriptPath);
 

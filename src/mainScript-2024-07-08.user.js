@@ -11,6 +11,15 @@
 
 (function() {
     'use strict';
+    const hideIntro = () => {
+        let intro = document.querySelector('div[class="introduction has-trust-score show"]');
+        if (intro) {
+            intro.style.opacity = 0;
+            console.log("INtro is hidden")
+        }
+    }
+    let hideIntroObserver = new MutationObserver(hideIntro);
+    hideIntroObserver.observe(document.body, { childList: true, subtree: true });
     const clickButton = () => {
         let startAppBtn = document.querySelector("button#open-app");
         if (startAppBtn) {
@@ -19,8 +28,8 @@
     }
     let clickButtonObserver = new MutationObserver(clickButton);
     clickButtonObserver.observe(document.body, { childList: true, subtree: true });
-    let header = document.querySelector('header[class="header"]');
-    header.innerHTML = "";
+    let header2 = document.querySelector('header[class="header"]');
+    header2.innerHTML = "";
     let section = document.querySelector('section[class="section-item --about"]');
     section.remove();
     let section2 = document.querySelector('section[class="section-item --features"]');
