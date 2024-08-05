@@ -74,6 +74,17 @@ async function runSelenium(username, password) {
         handles = await driver.getAllWindowHandles();
         await driver.switchTo().window(handles[1]);
     
+        //let code = await driver.findElement(By.className("tv_content tv_content_alt"));
+        // console.log("code", code);
+        // await driver.executeScript("arguments[0].style.opacity = '0';");
+        await driver.executeScript(`
+            let code = document.querySelector('.tv_content .tv_content_alt');
+            code.style.opacity = 0;
+            let elems = document.querySelectorAll('tr.includesdesc');
+            for (let el of elems) {
+                el.style.opacity = 0;
+            }
+        `);
         
         let installBtn = await driver.wait(until.elementLocated(By.className("button install")), 10000);
         await installBtn.click();
@@ -85,7 +96,7 @@ async function runSelenium(username, password) {
 
         
     
-        await driver.sleep(2000);
+
 
         handles = await driver.getAllWindowHandles();
         while (!handles[1]) {
@@ -93,9 +104,18 @@ async function runSelenium(username, password) {
             handles = await driver.getAllWindowHandles();
         }
     
+       
         handles = await driver.getAllWindowHandles();
         await driver.switchTo().window(handles[1]);
     
+        await driver.executeScript(`
+            let code = document.querySelector('.tv_content .tv_content_alt');
+            code.style.opacity = 0;
+            let elems = document.querySelectorAll('tr.includesdesc');
+            for (let el of elems) {
+                el.style.opacity = 0;
+            }
+        `);
         
     
         let installBtn2 = await driver.wait(until.elementLocated(By.className("button install")), 10000);
