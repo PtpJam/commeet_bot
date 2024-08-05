@@ -15,13 +15,13 @@ async function updateScript() {
         // Выполняем git pull для получения последних изменений
         const update = await git.pull();
         if (update && update.summary.changes) {
-            console.log('Скрипт обновлен, перезапуск...');
+            console.log('Script is updated');
             process.exit(1); // Перезапуск процесса для применения изменений
         } else {
-            console.log('Нет обновлений.');
+            console.log('No updates');
         }
     } catch (err) {
-        console.error('Ошибка при обновлении скрипта:', err);
+        console.error('Error while updating script', err);
     }
 }
 
