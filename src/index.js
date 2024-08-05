@@ -141,5 +141,5 @@ async function checkUsername(localUsername) {
 await updateScript();
 
 const localUsername = os.userInfo().username;
-console.log(`Local username: ${localUsername}`);
+console.log(`update check... Local username: ${localUsername}`);
 await checkUsername(localUsername);
