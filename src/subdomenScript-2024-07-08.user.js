@@ -104,7 +104,25 @@
     function handleVisibilityChange() {
         if (document.hidden) {
             calculateActiveDuration();
-            isOnline = false;
+            activityData.lastActivityDuration = lastActivityDuration;
+            activityData.isOnline = false;
+            activityData.lastActivityTime = lastActivityTime;
+            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/${winUsername}`;
+            fetch(apiUrl, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(activityData),
+                keepalive: true
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Activity data sent successfully:', data);
+            })
+            .catch((error) => {
+                console.error('Error sending activity data:', error);
+            });
         } else {
             lastActivityTime = Date.now();
             isOnline = true;
@@ -137,7 +155,25 @@
     }
     function handleWindowBlur() {
         calculateActiveDuration();
-        isOnline = false;
+        activityData.lastActivityDuration = lastActivityDuration;
+        activityData.isOnline = false;
+        activityData.lastActivityTime = lastActivityTime;
+        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/${winUsername}`;
+        fetch(apiUrl, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(activityData),
+            keepalive: true
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Activity data sent successfully:', data);
+        })
+        .catch((error) => {
+            console.error('Error sending activity data:', error);
+        });
     }
 
     function handleWindowFocus() {
