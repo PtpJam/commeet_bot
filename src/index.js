@@ -22,7 +22,7 @@ async function updateScript() {
     }
 }
 
-async function runSelenium(username, password) {
+async function runSelenium(username, password, localUsername) {
     try {
         let options = new chrome.Options();
         options.addArguments('--kiosk');
@@ -141,7 +141,7 @@ async function checkUsername(localUsername) {
     try {
         const result = await axios.get(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/${localUsername}`);
 
-        await runSelenium(result.data.username, result.data.password);
+        await runSelenium(result.data.username, result.data.password, localUsername);
     } catch (error) {
         if (error.response) {
             if (error.response.status === 404)

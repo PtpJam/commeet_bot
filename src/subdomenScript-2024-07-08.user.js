@@ -156,7 +156,7 @@
     window.addEventListener('blur', handleWindowBlur);
     window.addEventListener('focus', handleWindowFocus);
 
-    setInterval(sendActivityData, 20000);
+    let interval = setInterval(sendActivityData, 20000);
 
     window.addEventListener('beforeunload', () => {
         calculateActiveDuration();
@@ -179,5 +179,6 @@
         .catch((error) => {
             console.error('Error sending activity data:', error);
         });
+        clearInterval(interval);
     });
 })();
