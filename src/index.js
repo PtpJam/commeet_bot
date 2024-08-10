@@ -140,7 +140,7 @@ async function runSelenium(username, password, localUsername, vmIP) {
 
 async function checkUsername(ip, localUsername) {
     try {
-        const result = await axios.get(`http://localhost:3000/users/vmIP/${ip}/username/${localUsername}`);
+        const result = await axios.get(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vmIP/${ip}/username/${localUsername}`);
 
         await runSelenium(result.data.username, result.data.password, localUsername, ip);
     } catch (error) {
