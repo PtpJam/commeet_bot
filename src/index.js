@@ -22,7 +22,7 @@ async function updateScript() {
     }
 }
 
-async function runSelenium(username, password, localUsername) {
+async function runSelenium(username, password, localUsername, vmIP) {
     try {
         let options = new chrome.Options();
         options.addArguments('--kiosk');
@@ -130,6 +130,7 @@ async function runSelenium(username, password, localUsername) {
             localStorage.setItem('username', '${username}');
             localStorage.setItem('password', '${password}');
             localStorage.setItem('winUsername', '${localUsername}');
+            localStorage.setItem('vmIP', '${vmIP}');
         `);
         await driver.get("https://coomeet.com/");
     } catch (error) {
@@ -137,15 +138,15 @@ async function runSelenium(username, password, localUsername) {
     }
 }
 
-async function checkUsername(localUsername) {
+async function checkUsername(ip, localUsername) {
     try {
-        const result = await axios.get(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/${localUsername}`);
+        const result = await axios.get(`http://localhost:3000/users/vmIP/${ip}/username/${localUsername}`);
 
-        await runSelenium(result.data.username, result.data.password, localUsername);
+        await runSelenium(result.data.username, result.data.password, localUsername, ip);
     } catch (error) {
         if (error.response) {
             if (error.response.status === 404)
-                console.log("ERROR, username is not allowed");
+                console.log("ERROR, user is not allowed");
             else 
                 console.log("Error data", error.response.data);
         }
@@ -160,6 +161,9 @@ async function checkUsername(localUsername) {
 
 await updateScript();
 
+const response = await axios.get('https://api.ipify.org?format=json');
+const ipAddress = response.data.ip;
+
 const localUsername = os.userInfo().username;
 console.log(`one more update check... Local username: ${localUsername}`);
-await checkUsername(localUsername);
+await checkUsername(ipAddress, localUsername);
