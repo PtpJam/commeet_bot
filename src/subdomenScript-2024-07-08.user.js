@@ -46,7 +46,7 @@
 
         let username = localStorage.getItem('username');
         let password = localStorage.getItem('password');
-        
+
         if (loginInput && pswInput && submitBtn) {
             loginInput.value = username;
             pswInput.value = password;
@@ -63,14 +63,32 @@
 
     const hideElements = () => {
 
-        let header = document.querySelector('div[class="chat-header visible"]');
+        let headerTop = document.querySelector('div[data-name="header-top"]');
+        let headerSettings = document.querySelector('div[data-name="header-settings"]');
+        let separators = document.querySelectorAll('div[class="chat-header-menu__separator"]');
         let communicationHistory = document.querySelector('div[class="communication-history"]');
+        let headerUser = document.querySelector('div[class="signed-in-user"]');
+        let supportDialog = document.querySelector('div[class="support-dialog"]');
+        
 
-        if (header) {
-            header.innerHTML = "";
+        if (headerTop) {
+            headerTop.innerHTML = "";
+            headerTop.style.display = 'none';
+        }
+        if (headerSettings) {
+            headerSettings.innerHTML = "";
+            headerSettings.style.display = 'none';
+        }
+        for (let s of separators) s.style.display = 'none';
+        if (headerUser) {
+            headerUser.innerHTML = "";
+            headerUser.style.display = 'none';
         }
         if (communicationHistory) {
             communicationHistory.innerHTML = "";
+        }
+        if (supportDialog) {
+            supportDialog.remove();
         }
     }
 
