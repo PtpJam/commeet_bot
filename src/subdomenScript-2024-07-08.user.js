@@ -88,7 +88,8 @@
             communicationHistory.innerHTML = "";
         }
         if (supportDialog) {
-            supportDialog.remove();
+            supportDialog.innerHTML = "";
+            supportDialog.style.display = 'none';
         }
     }
 
