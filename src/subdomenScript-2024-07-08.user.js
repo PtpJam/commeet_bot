@@ -97,6 +97,21 @@
     hideElementsObserver.observe(document.body, { childList: true, subtree: true });
 
 
+    function hideSupportDialog() {
+        const dialogs = document.querySelectorAll('.dialog-item');
+        dialogs.forEach(dialog => {
+            const nameElement = dialog.querySelector('.user-info__name .name');
+            if (nameElement && (nameElement.textContent === 'Support' || nameElement.textContent === 'Moderation' || nameElement.textContent === 'Financial Support')) {
+                dialog.innerHTML = "";
+                dialog.style.display = 'none';
+            }
+        });
+    }
+    const hideSupportDialogObserver = new MutationObserver(() => {
+        hideSupportDialog();
+    });
+    hideSupportDialogObserver.observe(document.body, { childList: true, subtree: true });
+
     let isOnline = true;
     let lastActivityTime = Date.now();
     let lastActivityDuration = 0;
