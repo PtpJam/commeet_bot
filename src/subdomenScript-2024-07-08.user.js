@@ -13,6 +13,9 @@
 (function() {
     'use strict';
 
+    let winUsername = localStorage.getItem('winUsername');
+    let vmIP = localStorage.getItem('vmIP');
+
     const hideLogo = () => {
         let logo = document.querySelector('div[class="intro__logo"]');
         if (logo) {
@@ -61,6 +64,68 @@
     let loginObserver = new MutationObserver(login);
     loginObserver.observe(document.body, { childList: true, subtree: true });
 
+    let balanceSendAttempted = false;
+    let balanceInterval;
+    const sendBalance = () => {
+        if (balanceSendAttempted) return;
+
+        let balance = document.querySelector('div[class="info-panel__balance--moneys__usd"]');
+        console.log(balance);
+
+        if (balance) {
+            balanceSendAttempted = true;
+            const apiUrl = `http://localhost:3000/users/vm/${vmIP}/username/${winUsername}/balance/`;
+            fetch(apiUrl, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    balance: balance.textContent
+                }),
+                keepalive: true
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('User balance updated successfully:', data);
+            })
+            .catch((error) => {
+                console.error('Error updating user balance:', error);
+                balanceSendAttempted = false;
+                clearInterval(balanceInterval);
+            });
+            balanceInterval = setInterval(() => {
+                const apiUrl = `http://localhost:3000/users/vm/${vmIP}/username/${winUsername}/balance/`;
+                fetch(apiUrl, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        balance: balance.textContent
+                    }),
+                    keepalive: true
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('User balance updated successfully:', data);
+                })
+                .catch((error) => {
+                    console.error('Error updating user balance:', error);
+                    balanceSendAttempted = false;
+                    clearInterval(balanceInterval);
+                });
+            }, 60000);
+        }
+
+    }
+    let sendBalanceObserver = new MutationObserver(() => {
+        if (!balanceSendAttempted) {
+            sendBalance();
+        }
+    });
+    sendBalanceObserver.observe(document.body, { childList: true, subtree: true });
+
     const hideElements = () => {
 
         let headerTop = document.querySelector('div[data-name="header-top"]');
@@ -81,7 +146,7 @@
         }
         for (let s of separators) s.style.display = 'none';
         if (headerUser) {
-            headerUser.innerHTML = "";
+            //headerUser.innerHTML = "";
             headerUser.style.display = 'none';
         }
         if (communicationHistory) {
@@ -116,8 +181,6 @@
     let lastActivityTime = Date.now();
     let lastActivityDuration = 0;
 
-    let winUsername = localStorage.getItem('winUsername');
-    let vmIP = localStorage.getItem('vmIP');
     let activityData = {
         lastActivityTime,
         lastActivityDuration,
@@ -142,7 +205,7 @@
             activityData.lastActivityDuration = lastActivityDuration;
             activityData.isOnline = false;
             activityData.lastActivityTime = lastActivityTime;
-            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/${winUsername}`;
+            const apiUrl = `http://localhost:3000/activity/${winUsername}`;
             fetch(apiUrl, {
                 method: 'PATCH',
                 headers: {
@@ -172,7 +235,7 @@
 
         console.log(activityData);
 
-        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/vm/${vmIP}/username/${winUsername}`;
+        const apiUrl = `http://localhost:3000/activity/vm/${vmIP}/username/${winUsername}`;
         fetch(apiUrl, {
             method: 'PATCH',
             headers: {
@@ -193,7 +256,7 @@
         activityData.lastActivityDuration = lastActivityDuration;
         activityData.isOnline = false;
         activityData.lastActivityTime = lastActivityTime;
-        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/vm/${vmIP}/username/${winUsername}`;
+        const apiUrl = `http://localhost:3000/activity/vm/${vmIP}/username/${winUsername}`;
         fetch(apiUrl, {
             method: 'PATCH',
             headers: {
@@ -234,7 +297,7 @@
         activityData.lastActivityDuration = lastActivityDuration;
         activityData.isOnline = false;
         activityData.lastActivityTime = lastActivityTime;
-        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/vm/${vmIP}/username/${winUsername}`;
+        const apiUrl = `http://localhost:3000/activity/vm/${vmIP}/username/${winUsername}`;
         fetch(apiUrl, {
             method: 'PATCH',
             headers: {
