@@ -12,14 +12,10 @@
 (function() {
     'use strict';
 
-    // let winUsername = localStorage.getItem('winUsername');
-    // let vmIP = localStorage.getItem('vmIP');
-
-    // console.log("SKDfjqi(((99999999999999999999999999999999999----------------------")
-    // console.log(winUsername);
-    // console.log(vmIP);
     let balanceToday = 0;
     let balanceWeek = 0;
+
+    let minutes = 0;
 
     const hideIntro = () => {
         let intro = document.querySelector('div[class="introduction has-trust-score show"]');
@@ -73,8 +69,9 @@
     };
 
     const initEarningsDisplay = (winUsername, vmIP) => {
-        const earningsGoalDay = 5000;
-        const earningsGoalWeek = 20000;
+        let earningsGoalDay = 5000;
+        let earningsGoalWeek = 20000;
+        let minutesGoal = 0;
         console.log("Found local storage values");
         let container = document.querySelector('.section-item.--app.--app-show');
         if (container) {
@@ -98,9 +95,26 @@
             // Добавляем новый блок в целевой элемент
             container.appendChild(infoDiv);
 
+            const minutesProgressDiv = document.createElement('div');
+            minutesProgressDiv.style.display = "flex";
+            minutesProgressDiv.style.width = "500px";
+            minutesProgressDiv.style.justifyContent = "space-between";
+            minutesProgressDiv.id = "minutesProgressContainer";
+            minutesProgressDiv.style.margin = "20px 0";
+            minutesProgressDiv.innerHTML = `
+            <div style="width: 60%;">
+                <h3 style="color: white;">Цель по минутам общения</h3>
+                <div style="width:100%; background-color: #e0e0e0; border-radius: 5px; height: 30px; margin: 20px 0;">
+                    <div id="minutesProgressFillDay" style="width: 0%; height: 100%; background-color: #4caf50; border-radius: 5px;"></div>
+                </div>
+                <p id="minutesProgressTextDay" style="color: white;">Проведено в общении: 0 / ${minutesGoal}</p>
+            </div>
+            `;
+            container.appendChild(minutesProgressDiv);
+            
             const progressDiv = document.createElement('div');
             progressDiv.style.display = "flex";
-            progressDiv.style.width = "500px";
+            progressDiv.style.width = "600px";
             progressDiv.style.justifyContent = "space-between";
             progressDiv.id = "progressContainer";
             progressDiv.style.margin = "20px 0";
@@ -110,14 +124,14 @@
                 <div style="width:100%; background-color: #e0e0e0; border-radius: 5px; height: 30px; margin: 20px 0;">
                     <div id="progressFillDay" style="width: 0%; height: 100%; background-color: #4caf50; border-radius: 5px;"></div>
                 </div>
-                <p id="progressTextDay" style="color: white;">Заработано: 0 / $${earningsGoalDay}</p>
+                <p id="progressTextDay" style="color: white;">Заработано: 0 / ${earningsGoalDay}</p>
             </div>
             <div style="width: 45%;">
                 <h3 style="color: white;">Цель на неделю</h3>
                 <div style="width:100%; background-color: #e0e0e0; border-radius: 5px; height: 30px; margin: 20px 0;">
                     <div id="progressFillWeek" style="width: 0%; height: 100%; background-color: #4caf50; border-radius: 5px;"></div>
                 </div>
-                <p id="progressTextWeek" style="color: white;">Заработано: 0 / $${earningsGoalWeek}</p>
+                <p id="progressTextWeek" style="color: white;">Заработано: 0 / ${earningsGoalWeek}</p>
             </div>
             `;
             container.appendChild(progressDiv);
@@ -126,40 +140,63 @@
         }
 
         const earningsContainer = document.getElementById("earningInfoContainer");
-        const apiUrl = `http://localhost:3000/users/vm/${vmIP}/username/${winUsername}/balance/`;
+        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/balance/`;
 
         fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    console.log('User balance updated successfully:', data.earningsToday, data.earningsWeek);
-                    balanceToday = data.earningsToday;
-                    balanceWeek = data.earningsWeek;
+        .then(response => response.json())
+        .then(data => {
+            console.log('User balance updated successfully:', data.earningsToday, data.earningsWeek);
+            balanceToday = data.earningsToday;
+            balanceWeek = data.earningsWeek;
+            earningsGoalDay = data.dailyEarningsGoal;
+            earningsGoalWeek = data.weeklyEarningsGoal;
 
-                    // Обновляем данные в DOM
-                    earningsContainer.innerHTML = `
-                        <h1 style="font-size: 34px;">Заработано</h1>
-                        <p style="margin-top: 10px;">за сегодня: ${balanceToday}</p>
-                        <p style="margin-top: 10px;">за неделю: ${balanceWeek}</p>
-                    `;
-                    const userEarningsDay = balanceToday || 0;
-                    const earningsPercentageDay = (userEarningsDay / earningsGoalDay) * 100;
-                    const userEarningsWeek = balanceWeek || 0;
-                    const earningsPercentageWeek = (userEarningsWeek / earningsGoalWeek) * 100;
+            // Обновляем данные в DOM
+            earningsContainer.innerHTML = `
+                <h1 style="font-size: 34px;">Заработано</h1>
+                <p style="margin-top: 10px;">за сегодня: ${balanceToday}</p>
+                <p style="margin-top: 10px;">за неделю: ${balanceWeek}</p>
+            `;
+            const userEarningsDay = balanceToday || 0;
+            const earningsPercentageDay = (userEarningsDay / earningsGoalDay) * 100;
+            const userEarningsWeek = balanceWeek || 0;
+            const earningsPercentageWeek = (userEarningsWeek / earningsGoalWeek) * 100;
 
-                    // Update the progress bar and text
-                    document.getElementById('progressFillDay').style.width = `${earningsPercentageDay}%`;
-                    document.getElementById('progressTextDay').textContent = `Заработано: ${userEarningsDay} / ${earningsGoalDay}`;
-                    document.getElementById('progressFillWeek').style.width = `${earningsPercentageWeek}%`;
-                    document.getElementById('progressTextWeek').textContent = `Заработано: ${userEarningsWeek} / ${earningsGoalWeek}`;
-                })
-                .catch((error) => {
-                    console.error('Error updating user balance:', error);
-                });
+            // Update the progress bar and text
+            document.getElementById('progressFillDay').style.width = `${earningsPercentageDay}%`;
+            document.getElementById('progressTextDay').textContent = `Заработано: ${userEarningsDay} / ${earningsGoalDay}`;
+            document.getElementById('progressFillWeek').style.width = `${earningsPercentageWeek}%`;
+            document.getElementById('progressTextWeek').textContent = `Заработано: ${userEarningsWeek} / ${earningsGoalWeek}`;
+        })
+        .catch((error) => {
+            console.error('Error updating user balance:', error);
+        });
         
+        const apiUrl2 = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/minutes/`;
+
+        fetch(apiUrl2)
+        .then(response => response.json())
+        .then(data => {
+            console.log('User minuntes updated successfully:', data.communicateMinutes, data.communicateMinutesGoal);
+            minutes = data.communicateMinutes;
+            minutesGoal = data.communicateMinutesGoal;
+
+            const userMinutes = minutes || 0;
+            const userMinutesPercentage = (userMinutes / minutesGoal) * 100;
+
+            document.getElementById('minutesProgressFillDay').style.width = `${userMinutesPercentage}%`;
+            document.getElementById('minutesProgressTextDay').textContent = `Проведено в общении: ${userMinutes} / ${minutesGoal}`;
+        })
+        .catch((error) => {
+            console.error('Error updating user minuntes:', error);
+        });
+        
+        
+                
         setInterval(() => {
-            console.log("Обновление баланса пользователя");
+            console.log("Обновление баланса пользователя и минут");
             const earningsContainer = document.getElementById("earningInfoContainer");
-            const apiUrl = `http://localhost:3000/users/vm/${vmIP}/username/${winUsername}/balance/`;
+            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/balance/`;
             
             fetch(apiUrl)
             .then(response => response.json())
@@ -167,6 +204,8 @@
                 console.log('User balance updated successfully:', data.earningsToday, data.earningsWeek);
                 balanceToday = data.earningsToday;
                 balanceWeek = data.earningsWeek;
+                earningsGoalDay = data.dailyEarningsGoal;
+                earningsGoalWeek = data.weeklyEarningsGoal;
 
                 // Обновляем данные в DOM
                 earningsContainer.innerHTML = `

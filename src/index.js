@@ -25,7 +25,7 @@ async function updateScript() {
 async function runSelenium(username, password, localUsername, vmIP) {
     try {
         let options = new chrome.Options();
-        //options.addArguments('--kiosk');
+        options.addArguments('--kiosk');
         options.addExtensions('./src/5.2.1_0.crx');
     
         let driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
@@ -144,9 +144,9 @@ async function runSelenium(username, password, localUsername, vmIP) {
 
 async function checkUsername(ip, localUsername) {
     try {
-        //const result = await axios.get(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vmIP/${ip}/username/${localUsername}`);
+        const result = await axios.get(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vmIP/${ip}/username/${localUsername}`);
 
-        await runSelenium("valeria2109aaa@gmail.com", "Valeria2109", "f", "test");
+        await runSelenium(result.data.username, result.data.password, localUsername, ip);
     } catch (error) {
         if (error.response) {
             if (error.response.status === 404)
@@ -167,6 +167,7 @@ await updateScript();
 
 const response = await axios.get('https://api.ipify.org?format=json');
 const ipAddress = response.data.ip;
+
 console.log(ipAddress);
 
 const localUsername = os.userInfo().username;

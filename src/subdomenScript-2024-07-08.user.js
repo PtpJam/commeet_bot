@@ -70,11 +70,11 @@
         if (balanceSendAttempted) return;
 
         let balance = document.querySelector('div[class="info-panel__balance--moneys__usd"]');
-        console.log(balance);
+        console.log("Balance", balance);
 
         if (balance) {
             balanceSendAttempted = true;
-            const apiUrl = `http://localhost:3000/users/vm/${vmIP}/username/${winUsername}/balance/`;
+            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/balance/`;
             fetch(apiUrl, {
                 method: 'PATCH',
                 headers: {
@@ -95,7 +95,7 @@
                 clearInterval(balanceInterval);
             });
             balanceInterval = setInterval(() => {
-                const apiUrl = `http://localhost:3000/users/vm/${vmIP}/username/${winUsername}/balance/`;
+                const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/balance/`;
                 fetch(apiUrl, {
                     method: 'PATCH',
                     headers: {
@@ -125,6 +125,151 @@
         }
     });
     sendBalanceObserver.observe(document.body, { childList: true, subtree: true });
+
+
+    let tariff = null;
+
+    let sendTariffAttempted = false;
+    const sendTariff = () => {
+        if (sendTariffAttempted) return;
+
+        let el = document.querySelector('div[class="info-panel__balance--calculations"]');
+        if (el) {
+            sendTariffAttempted = true;
+            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/tariff/`;
+            fetch(apiUrl, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tariff: el.textContent
+                }),
+                keepalive: true
+            })
+            .then(response => response.json())
+            .then(data => {
+                tariff = el.textContent
+                console.log('User tariff updated successfully:', data);
+            })
+            .catch((error) => {
+                console.error('Error sending tariff:', error);
+                sendTariffAttempted = false;
+                clearInterval(balanceInterval);
+            });
+        }
+    }
+
+    let sendTariffObserver = new MutationObserver(sendTariff);
+    sendTariffObserver.observe(document.body, { childList: true, subtree: true });
+
+    
+    let hidePopupAttempted = false;
+    const hidePopup = () => {
+        if (hidePopupAttempted) return;
+
+        const popup = document.querySelector('.popup-item');
+        if (popup) {
+            console.log("-------------------------", popup);
+            popup.style.opacity = 0;
+        }
+    }
+
+    let hidePopupObserver = new MutationObserver(hidePopup);
+    hidePopupObserver.observe(document.body, { childList: true, subtree: true });
+
+
+
+    let clickTariffAttempted = false;
+
+    const clickTariff = () => {
+        if (clickTariffAttempted) return;
+
+        let el = document.querySelector('div[class="info-panel__balance--calculations"]');
+        if (el) {
+            el.click();
+            clickTariffAttempted = true;
+        }
+    }
+
+    let clickTariffObserver = new MutationObserver(clickTariff);
+    clickTariffObserver.observe(document.body, { childList: true, subtree: true });
+
+
+
+    function findMinutesForTariff(tariff) {
+        const rateCells = document.querySelectorAll('.tariffs__table--column__row--label.static');
+
+        let returned = null;
+        rateCells.forEach(function(rateCell) {
+            if (rateCell.textContent.trim() === tariff) {
+                const column = rateCell.closest('.tariffs__table--column');
+                const nextColumn = column.nextElementSibling;
+                const minutesCell = nextColumn.querySelector('.centered').nextElementSibling.querySelector('.tariffs__table--column__row--label');
+
+                const minutesValue = minutesCell ? minutesCell.textContent.trim() : null;
+                console.log('Количество минут для тарифа', tariff, ": ", minutesValue);
+                returned = minutesValue;
+            }
+        });
+        return returned;
+    }
+
+    let sendCommAttempted = false;
+    const sendComm = () => {
+        if (sendCommAttempted) return;
+
+        let communicateMinutes = null;
+        console.log("FOUND TARIFFFF", tariff);
+        let communicateMinutesGoal = findMinutesForTariff(tariff);
+        console.log(communicateMinutesGoal);
+        
+        const lastColumn = document.querySelector('.tariffs__table--column:last-child');
+        if (lastColumn) {
+            const userValue = lastColumn.querySelectorAll('.tariffs__table--column__row.centered .tariffs__table--column__row--label')[1];
+            communicateMinutes = userValue.textContent.trim();
+            console.log(communicateMinutes);
+
+        }
+
+        console.log("!!!!!!!!!!!!!!!!!!!!!!")
+        console.log(communicateMinutes);
+        console.log(communicateMinutesGoal);
+        console.log("!!!!!!!!!!!!!!!!!!!!!!")
+        if (communicateMinutes && communicateMinutesGoal) {
+            sendCommAttempted = true;
+            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/communication/`;
+            fetch(apiUrl, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    communicateMinutes,
+                    communicateMinutesGoal
+                }),
+                keepalive: true
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('User communication minutes updated successfully:', data);
+                const closeEl = document.querySelector('.close-button');
+                console.log(closeEl);
+                closeEl.click();
+            })
+            .catch((error) => {
+                console.error('Error updating user communication minutes:', error);
+                sendCommAttempted = true;
+            });
+        }
+    }
+
+    let sendCommObserver = new MutationObserver(sendComm);
+    sendCommObserver.observe(document.body, { childList: true, subtree: true });
+
+
+
+
 
     const hideElements = () => {
 
@@ -177,41 +322,23 @@
     });
     hideSupportDialogObserver.observe(document.body, { childList: true, subtree: true });
 
-    let isOnline = true;
-    let lastActivityTime = Date.now();
-    let lastActivityDuration = 0;
+    let isActive = false;
+    function trackActivity() {
+        const cameraWindow = document.querySelector('div[class="dialog-user-camera__video"]')
 
-    let activityData = {
-        lastActivityTime,
-        lastActivityDuration,
-        isOnline
-    };
-
-    function calculateActiveDuration() {
-        if (isOnline) {
-            const currentTime = Date.now();
-            const timeDiff = (currentTime - lastActivityTime) / 1000;
-            lastActivityDuration += timeDiff;
-            lastActivityTime = currentTime;
-        }
-    }
-
-    function updateLastActiveTime() {
-        lastActivityTime = Date.now();
-    }
-    function handleVisibilityChange() {
-        if (document.hidden) {
-            calculateActiveDuration();
-            activityData.lastActivityDuration = lastActivityDuration;
-            activityData.isOnline = false;
-            activityData.lastActivityTime = lastActivityTime;
-            const apiUrl = `http://localhost:3000/activity/${winUsername}`;
+        console.log("Camera Window", cameraWindow);
+        if (cameraWindow && !isActive) {
+            console.log("ACCTIIIIIIVE ++++++++++++++++++++++++++++");
+            isActive = true;
+            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/vm/${vmIP}/username/${winUsername}`;
             fetch(apiUrl, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(activityData),
+                body: JSON.stringify({
+                    isOnline: true
+                }),
                 keepalive: true
             })
             .then(response => response.json())
@@ -221,89 +348,48 @@
             .catch((error) => {
                 console.error('Error sending activity data:', error);
             });
-        } else {
-            lastActivityTime = Date.now();
-            isOnline = true;
+        }
+        else if (!cameraWindow && isActive) {
+            console.log("UNACTiIIIIVE ---------------------");
+            isActive = false;
+            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/vm/${vmIP}/username/${winUsername}`;
+            fetch(apiUrl, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    isOnline: false
+                }),
+                keepalive: true
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Activity data sent successfully:', data);
+            })
+            .catch((error) => {
+                console.error('Error sending activity data:', error);
+            });
         }
     }
-
-    function sendActivityData() {
-        calculateActiveDuration();
-        activityData.lastActivityDuration = lastActivityDuration;
-        activityData.isOnline = isOnline;
-        activityData.lastActivityTime = lastActivityTime;
-
-        console.log(activityData);
-
-        const apiUrl = `http://localhost:3000/activity/vm/${vmIP}/username/${winUsername}`;
-        fetch(apiUrl, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(activityData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Activity data sent successfully:', data);
-        })
-        .catch((error) => {
-            console.error('Error sending activity data:', error);
-        });
-    }
-    function handleWindowBlur() {
-        calculateActiveDuration();
-        activityData.lastActivityDuration = lastActivityDuration;
-        activityData.isOnline = false;
-        activityData.lastActivityTime = lastActivityTime;
-        const apiUrl = `http://localhost:3000/activity/vm/${vmIP}/username/${winUsername}`;
-        fetch(apiUrl, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(activityData),
-            keepalive: true
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Activity data sent successfully:', data);
-        })
-        .catch((error) => {
-            console.error('Error sending activity data:', error);
-        });
-    }
-
-    function handleWindowFocus() {
-        lastActivityTime = Date.now();
-        isOnline = true;
-    }
+    const trackActivityObserver = new MutationObserver(() => {
+        trackActivity();
+    });
+    trackActivityObserver.observe(document.body, { childList: true, subtree: true });
 
 
-    window.addEventListener('mousemove', calculateActiveDuration);
-    window.addEventListener('keydown', calculateActiveDuration);
-    window.addEventListener('scroll', calculateActiveDuration);
-    window.addEventListener('click', calculateActiveDuration);
-
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('blur', handleWindowBlur);
-    window.addEventListener('focus', handleWindowFocus);
-
-    let interval = setInterval(sendActivityData, 20000);
+    
 
     window.addEventListener('beforeunload', () => {
-        calculateActiveDuration();
-        activityData.lastActivityDuration = lastActivityDuration;
-        activityData.isOnline = false;
-        activityData.lastActivityTime = lastActivityTime;
-        const apiUrl = `http://localhost:3000/activity/vm/${vmIP}/username/${winUsername}`;
+        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/vm/${vmIP}/username/${winUsername}`;
         fetch(apiUrl, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(activityData),
+            body: JSON.stringify({
+                isOnline: false
+            }),
             keepalive: true
         })
         .then(response => response.json())
@@ -313,6 +399,5 @@
         .catch((error) => {
             console.error('Error sending activity data:', error);
         });
-        clearInterval(interval);
     });
 })();
