@@ -13,8 +13,56 @@
 (function() {
     'use strict';
 
+    let comeFutherAttempted = false;
+    const comeFuther = () => {
+        if (comeFutherAttempted) return;
+        let btn = document.querySelector('.gender-item.female');
+        if (btn) {
+            btn.click();
+        }
+    }
+    let comeFutherObserver = new MutationObserver(comeFuther);
+    comeFutherObserver.observe(document.body, { childList: true, subtree: true });
+
+    let comeFuther2Attempted = false;
+    const comeFuther2 = () => {
+        if (comeFuther2Attempted) return;
+        let btn = document.querySelector(".ui-simple-button.size-56.color-blue");
+        if (btn) {
+            btn.click();
+        }
+    }
+    let comeFuther2Observer = new MutationObserver(comeFuther2);
+    comeFuther2Observer.observe(document.body, { childList: true, subtree: true });
+
+
+
     let winUsername = localStorage.getItem('winUsername');
     let vmIP = localStorage.getItem('vmIP');
+
+    let hideOverlayAttempted = false;
+    const hideOverlay = () => {
+        if (hideOverlayAttempted) return;
+        if (vmIP && winUsername) {
+            fetch(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`,
+                {
+                    method: "PATCH"
+                }
+            ).then(res => res.json())
+            .then(data => {
+                console.log(data);
+                hideOverlayAttempted = true;
+            })
+            .catch(err => {
+                console.log(err);
+                hideOverlayAttempted = false;
+            });
+        }
+    }
+    let hideOverlayObserver = new MutationObserver(hideOverlay);
+    hideOverlayObserver.observe(document.body, { childList: true, subtree: true });
+
+
 
     const hideLogo = () => {
         let logo = document.querySelector('div[class="intro__logo"]');
@@ -163,6 +211,22 @@
     let sendTariffObserver = new MutationObserver(sendTariff);
     sendTariffObserver.observe(document.body, { childList: true, subtree: true });
 
+
+    let clickTariffAttempted = false;
+
+    const clickTariff = () => {
+        if (clickTariffAttempted) return;
+
+        let el = document.querySelector('div[class="info-panel__balance--calculations"]');
+        if (el) {
+            el.click();
+            clickTariffAttempted = true;
+        }
+    }
+
+    let clickTariffObserver = new MutationObserver(clickTariff);
+    clickTariffObserver.observe(document.body, { childList: true, subtree: true });
+
     
     let hidePopupAttempted = false;
     const hidePopup = () => {
@@ -180,29 +244,12 @@
 
 
 
-    let clickTariffAttempted = false;
-
-    const clickTariff = () => {
-        if (clickTariffAttempted) return;
-
-        let el = document.querySelector('div[class="info-panel__balance--calculations"]');
-        if (el) {
-            el.click();
-            clickTariffAttempted = true;
-        }
-    }
-
-    let clickTariffObserver = new MutationObserver(clickTariff);
-    clickTariffObserver.observe(document.body, { childList: true, subtree: true });
-
-
-
     function findMinutesForTariff(tariff) {
         const rateCells = document.querySelectorAll('.tariffs__table--column__row--label.static');
 
         let returned = null;
         rateCells.forEach(function(rateCell) {
-            if (rateCell.textContent.trim() === tariff) {
+            if (rateCell.textContent.trim() === "5/12") {
                 const column = rateCell.closest('.tariffs__table--column');
                 const nextColumn = column.nextElementSibling;
                 const minutesCell = nextColumn.querySelector('.centered').nextElementSibling.querySelector('.tariffs__table--column__row--label');

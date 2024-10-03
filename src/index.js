@@ -24,14 +24,35 @@ async function updateScript() {
 
 async function runSelenium(username, password, localUsername, vmIP) {
     try {
+        await axios.patch(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/visibility/vm/${vmIP}/username/${localUsername}?flag=hide`);
         let options = new chrome.Options();
         options.addArguments('--kiosk');
         options.addExtensions('./src/5.2.1_0.crx');
     
         let driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
 
-    
         await driver.get("chrome://extensions/");
+        await driver.executeScript(`
+            let overlay = document.createElement('div');
+            overlay.id = 'loading-overlay';
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.backgroundColor = 'black';
+            overlay.style.zIndex = '9999';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+        
+            let img = document.createElement('img');
+            img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
+            img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
+            overlay.appendChild(img);
+        
+            document.body.appendChild(overlay);
+        `);
     
         await driver.executeScript(`
             let switchElement = document.querySelector('extensions-manager').shadowRoot
@@ -56,8 +77,29 @@ async function runSelenium(username, password, localUsername, vmIP) {
         await driver.switchTo().window(handles[0]);
     
         await driver.get('chrome-extension://dhdgffkkebhmkfjojejmpbldmpobfkfo/options.html#nav=utils');
+        await driver.executeScript(`
+            let overlay = document.createElement('div');
+            overlay.id = 'loading-overlay';
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.backgroundColor = 'black';
+            overlay.style.zIndex = '9999';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+        
+            let img = document.createElement('img');
+            img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
+            img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
+            overlay.appendChild(img);
+        
+            document.body.appendChild(overlay);
+        `);
     
-        await driver.executeScript(`document.body.style.opacity = '0';`);
+        //await driver.executeScript(`document.body.style.opacity = '0';`);
     
         let subdomenScriptPath = path.resolve('./src/subdomenScript-2024-07-08.user.js');
         let mainScriptPath = path.resolve('./src/mainScript-2024-07-08.user.js');
@@ -74,18 +116,48 @@ async function runSelenium(username, password, localUsername, vmIP) {
         handles = await driver.getAllWindowHandles();
         await driver.switchTo().window(handles[1]);
     
+    
+        
+
         
         await driver.executeScript(`
-            let code = document.querySelector('.tv_content .tv_content_alt');
-            code.style.opacity = 0;
-            let elems = document.querySelectorAll('tr.includesdesc');
-            for (let el of elems) {
-                el.style.opacity = 0;
-            }
+            let overlay = document.createElement('div');
+            overlay.id = 'loading-overlay';
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.backgroundColor = 'black';
+            overlay.style.zIndex = '9999';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+        
+            let img = document.createElement('img');
+            img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
+            img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
+            overlay.appendChild(img);
+        
+            document.body.appendChild(overlay);
         `);
+    
+        
+        // await driver.executeScript(`
+        //     let code = document.querySelector('.tv_content .tv_content_alt');
+        //     code.style.opacity = 0;
+        //     let elems = document.querySelectorAll('tr.includesdesc');
+        //     for (let el of elems) {
+        //         el.style.opacity = 0;
+        //     }
+        // `);
         
         let installBtn = await driver.wait(until.elementLocated(By.className("button install")), 10000);
-        await installBtn.click();
+        await driver.executeScript(`
+            let btn = document.querySelector('.button.install');
+            btn.click(); 
+        `)
+        //await installBtn.click();
     
         handles = await driver.getAllWindowHandles();
         await driver.switchTo().window(handles[0]);
@@ -107,19 +179,45 @@ async function runSelenium(username, password, localUsername, vmIP) {
        
         handles = await driver.getAllWindowHandles();
         await driver.switchTo().window(handles[1]);
-    
+
         await driver.executeScript(`
-            let code = document.querySelector('.tv_content .tv_content_alt');
-            code.style.opacity = 0;
-            let elems = document.querySelectorAll('tr.includesdesc');
-            for (let el of elems) {
-                el.style.opacity = 0;
-            }
+            let overlay = document.createElement('div');
+            overlay.id = 'loading-overlay';
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.backgroundColor = 'black';
+            overlay.style.zIndex = '9999';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+        
+            let img = document.createElement('img');
+            img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
+            img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
+            overlay.appendChild(img);
+        
+            document.body.appendChild(overlay);
         `);
+    
+        // await driver.executeScript(`
+        //     let code = document.querySelector('.tv_content .tv_content_alt');
+        //     code.style.opacity = 0;
+        //     let elems = document.querySelectorAll('tr.includesdesc');
+        //     for (let el of elems) {
+        //         el.style.opacity = 0;
+        //     }
+        // `);
         
     
         let installBtn2 = await driver.wait(until.elementLocated(By.className("button install")), 10000);
-        await installBtn2.click();
+        await driver.executeScript(`
+            let btn = document.querySelector('.button.install');
+            btn.click(); 
+        `)
+        // await installBtn2.click();
     
         handles = await driver.getAllWindowHandles();
         await driver.switchTo().window(handles[0]);

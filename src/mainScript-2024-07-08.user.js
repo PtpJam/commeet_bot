@@ -12,6 +12,29 @@
 (function() {
     'use strict';
 
+    window.onload = () => {
+        document.style.opacity = 0;
+        let overlay = document.createElement('div');
+            overlay.id = 'loading-overlay';
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.backgroundColor = 'black';
+            overlay.style.zIndex = '9999';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+        
+            let img = document.createElement('img');
+            img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
+            img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
+            overlay.appendChild(img);
+        
+            document.body.appendChild(overlay);
+    }
+
     let balanceToday = 0;
     let balanceWeek = 0;
 
@@ -51,6 +74,15 @@
     let section7 = document.querySelector('footer[class="footer"]');
     section7.remove();
 
+    const hideOverlay2 = () => {
+        let overlay = document.getElementById('loading-overlay');
+        console.log("OVERLAY OVERLAY OVERLAY OVERLAY", overlay);
+
+        if (overlay) overlay.remove();
+    }
+    let hideOverlayObserver2 = new MutationObserver(hideOverlay2);
+    setTimeout(hideOverlay2, 5000);
+
 
     const checkLocalStorageAndInit = () => {
         let winUsername = localStorage.getItem('winUsername');
@@ -68,21 +100,30 @@
         }
     };
 
+    let isMinutesGoalCompleted = false;
+
     const initEarningsDisplay = (winUsername, vmIP) => {
         let earningsGoalDay = 5000;
         let earningsGoalWeek = 20000;
         let minutesGoal = 0;
         console.log("Found local storage values");
         let container = document.querySelector('.section-item.--app.--app-show');
-        if (container) {
+        let myContainer = document.createElement('div');
+        myContainer.id = "myContainer";
+        myContainer.style.display = "flex";
+        myContainer.style.flexDirection = "row";
+        myContainer.style.gap = "20px";
+        myContainer.style.marginTop = "20px";
+        container.appendChild(myContainer);
+        if (myContainer) {
             // Создаем новый div для информации
             const infoDiv = document.createElement('div');
             infoDiv.id = "earningInfoContainer";
             infoDiv.classList.add('custom-info-block');
             infoDiv.style.padding = "25px 15px";
             infoDiv.style.borderRadius = "5px";
-            infoDiv.style.width = "600px";
-            infoDiv.style.margin = "40px 0";
+            infoDiv.style.width = "300px";
+            infoDiv.style.height = "150px";
             infoDiv.style.backgroundColor = "#f7f9fb";
 
             // Добавляем текст в div
@@ -93,48 +134,50 @@
             `;
 
             // Добавляем новый блок в целевой элемент
-            container.appendChild(infoDiv);
+            myContainer.appendChild(infoDiv);
 
-            const minutesProgressDiv = document.createElement('div');
-            minutesProgressDiv.style.display = "flex";
-            minutesProgressDiv.style.width = "500px";
-            minutesProgressDiv.style.justifyContent = "space-between";
-            minutesProgressDiv.id = "minutesProgressContainer";
-            minutesProgressDiv.style.margin = "20px 0";
-            minutesProgressDiv.innerHTML = `
-            <div style="width: 60%;">
-                <h3 style="color: white;">Цель по минутам общения</h3>
-                <div style="width:100%; background-color: #e0e0e0; border-radius: 5px; height: 30px; margin: 20px 0;">
-                    <div id="minutesProgressFillDay" style="width: 0%; height: 100%; background-color: #4caf50; border-radius: 5px;"></div>
+            if (!isMinutesGoalCompleted) {
+                const minutesProgressDiv = document.createElement('div');
+                minutesProgressDiv.style.display = "flex";
+                minutesProgressDiv.style.width = "300px";
+                minutesProgressDiv.style.justifyContent = "space-between";
+                minutesProgressDiv.id = "minutesProgressContainer";
+                minutesProgressDiv.style.margin = "20px 0";
+                minutesProgressDiv.innerHTML = `
+                <div style="width: 100%;">
+                    <h3 style="color: white;">Цель по минутам общения</h3>
+                    <div style="width:100%; background-color: #e0e0e0; border-radius: 5px; height: 30px; margin: 20px 0;">
+                        <div id="minutesProgressFillDay" style="width: 0%; max-width: 100%; height: 100%; background-color: #4caf50; border-radius: 5px;"></div>
+                    </div>
+                    <p id="minutesProgressTextDay" style="color: white;">Проведено в общении: 0 / ${minutesGoal}</p>
                 </div>
-                <p id="minutesProgressTextDay" style="color: white;">Проведено в общении: 0 / ${minutesGoal}</p>
-            </div>
-            `;
-            container.appendChild(minutesProgressDiv);
+                `;
+                myContainer.appendChild(minutesProgressDiv);
+            }
             
             const progressDiv = document.createElement('div');
-            progressDiv.style.display = "flex";
-            progressDiv.style.width = "600px";
+            progressDiv.style.display = "block";
+            progressDiv.style.width = "300px";
             progressDiv.style.justifyContent = "space-between";
             progressDiv.id = "progressContainer";
             progressDiv.style.margin = "20px 0";
             progressDiv.innerHTML = `
-            <div style="width: 45%;">
+            <div style="width: 100%;">
                 <h3 style="color: white;">Цель на день</h3>
                 <div style="width:100%; background-color: #e0e0e0; border-radius: 5px; height: 30px; margin: 20px 0;">
-                    <div id="progressFillDay" style="width: 0%; height: 100%; background-color: #4caf50; border-radius: 5px;"></div>
+                    <div id="progressFillDay" style="width: 0%; max-width: 100%; height: 100%; background-color: #4caf50; border-radius: 5px;"></div>
                 </div>
                 <p id="progressTextDay" style="color: white;">Заработано: 0 / ${earningsGoalDay}</p>
             </div>
-            <div style="width: 45%;">
+            <div style="width: 100%;">
                 <h3 style="color: white;">Цель на неделю</h3>
                 <div style="width:100%; background-color: #e0e0e0; border-radius: 5px; height: 30px; margin: 20px 0;">
-                    <div id="progressFillWeek" style="width: 0%; height: 100%; background-color: #4caf50; border-radius: 5px;"></div>
+                    <div id="progressFillWeek" style="width: 0%; max-width: 100%; height: 100%; background-color: #4caf50; border-radius: 5px;"></div>
                 </div>
                 <p id="progressTextWeek" style="color: white;">Заработано: 0 / ${earningsGoalWeek}</p>
             </div>
             `;
-            container.appendChild(progressDiv);
+            myContainer.appendChild(progressDiv);
         } else {
             console.log("Элемент с классом .section-item --app --app-show не найден.");
         }
@@ -175,24 +218,32 @@
         const apiUrl2 = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/minutes/`;
 
         fetch(apiUrl2)
-        .then(response => response.json())
+        .then(response => {
+            if (response.status === 300) {
+                isMinutesGoalCompleted = true;
+                let minutesContainer = document.getElementById("minutesProgressContainer");
+                minutesContainer.style.display = "none";
+            }
+            return response.json();
+        })
         .then(data => {
-            console.log('User minuntes updated successfully:', data.communicateMinutes, data.communicateMinutesGoal);
-            minutes = data.communicateMinutes;
-            minutesGoal = data.communicateMinutesGoal;
+            if (!isMinutesGoalCompleted) {
+                console.log('User minuntes updated successfully:', data.communicateMinutes, data.communicateMinutesGoal);
+                minutes = data.communicateMinutes;
+                minutesGoal = data.communicateMinutesGoal;
 
-            const userMinutes = minutes || 0;
-            const userMinutesPercentage = (userMinutes / minutesGoal) * 100;
+                const userMinutes = minutes || 0;
+                const userMinutesPercentage = (userMinutes / minutesGoal) * 100;
 
-            document.getElementById('minutesProgressFillDay').style.width = `${userMinutesPercentage}%`;
-            document.getElementById('minutesProgressTextDay').textContent = `Проведено в общении: ${userMinutes} / ${minutesGoal}`;
+                document.getElementById('minutesProgressFillDay').style.width = `${userMinutesPercentage}%`;
+                document.getElementById('minutesProgressTextDay').textContent = `Проведено в общении: ${userMinutes} / ${minutesGoal}`;
+            }
         })
         .catch((error) => {
             console.error('Error updating user minuntes:', error);
         });
-        
-        
-                
+
+
         setInterval(() => {
             console.log("Обновление баланса пользователя и минут");
             const earningsContainer = document.getElementById("earningInfoContainer");
@@ -227,7 +278,7 @@
             .catch((error) => {
                 console.error('Error updating user balance:', error);
             });
-        }, 60000);
+        }, 120000);
     };
 
     window.onload = checkLocalStorageAndInit;
