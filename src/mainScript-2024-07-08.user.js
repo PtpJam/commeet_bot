@@ -12,28 +12,6 @@
 (function() {
     'use strict';
 
-    window.onload = () => {
-        document.style.opacity = 0;
-        let overlay = document.createElement('div');
-            overlay.id = 'loading-overlay';
-            overlay.style.position = 'fixed';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100vw';
-            overlay.style.height = '100vh';
-            overlay.style.backgroundColor = 'black';
-            overlay.style.zIndex = '9999';
-            overlay.style.display = 'flex';
-            overlay.style.justifyContent = 'center';
-            overlay.style.alignItems = 'center';
-        
-            let img = document.createElement('img');
-            img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
-            img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
-            overlay.appendChild(img);
-        
-            document.body.appendChild(overlay);
-    }
 
     let balanceToday = 0;
     let balanceWeek = 0;
@@ -73,15 +51,6 @@
     section6.remove();
     let section7 = document.querySelector('footer[class="footer"]');
     section7.remove();
-
-    const hideOverlay2 = () => {
-        let overlay = document.getElementById('loading-overlay');
-        console.log("OVERLAY OVERLAY OVERLAY OVERLAY", overlay);
-
-        if (overlay) overlay.remove();
-    }
-    let hideOverlayObserver2 = new MutationObserver(hideOverlay2);
-    setTimeout(hideOverlay2, 5000);
 
 
     const checkLocalStorageAndInit = () => {

@@ -13,30 +13,6 @@
 (function() {
     'use strict';
 
-    let comeFutherAttempted = false;
-    const comeFuther = () => {
-        if (comeFutherAttempted) return;
-        let btn = document.querySelector('.gender-item.female');
-        if (btn) {
-            btn.click();
-        }
-    }
-    let comeFutherObserver = new MutationObserver(comeFuther);
-    comeFutherObserver.observe(document.body, { childList: true, subtree: true });
-
-    let comeFuther2Attempted = false;
-    const comeFuther2 = () => {
-        if (comeFuther2Attempted) return;
-        let btn = document.querySelector(".ui-simple-button.size-56.color-blue");
-        if (btn) {
-            btn.click();
-        }
-    }
-    let comeFuther2Observer = new MutationObserver(comeFuther2);
-    comeFuther2Observer.observe(document.body, { childList: true, subtree: true });
-
-
-
     let winUsername = localStorage.getItem('winUsername');
     let vmIP = localStorage.getItem('vmIP');
 

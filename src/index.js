@@ -230,6 +230,11 @@ async function runSelenium(username, password, localUsername, vmIP) {
             localStorage.setItem('winUsername', '${localUsername}');
             localStorage.setItem('vmIP', '${vmIP}');
         `);
+        await driver.get("https://iframe.coomeet.com");
+        await driver.executeScript(`
+            localStorage.setItem('winUsername', '${localUsername}');
+            localStorage.setItem('vmIP', '${vmIP}');
+        `);
         await driver.get("https://coomeet.com/");
         await driver.executeScript(`
             localStorage.setItem('winUsername', '${localUsername}');
