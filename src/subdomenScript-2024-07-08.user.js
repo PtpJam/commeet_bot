@@ -20,19 +20,21 @@
     const hideOverlay = () => {
         if (hideOverlayAttempted) return;
         if (vmIP && winUsername) {
-            fetch(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`,
-                {
-                    method: "PATCH"
-                }
-            ).then(res => res.json())
-            .then(data => {
-                console.log(data);
-                hideOverlayAttempted = true;
-            })
-            .catch(err => {
-                console.log(err);
-                hideOverlayAttempted = false;
-            });
+            setTimeout(() => {
+                fetch(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`,
+                    {
+                        method: "PATCH"
+                    }
+                ).then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    hideOverlayAttempted = true;
+                })
+                .catch(err => {
+                    console.log(err);
+                    hideOverlayAttempted = false;
+                });
+            }, 3000);
         }
     }
     let hideOverlayObserver = new MutationObserver(hideOverlay);
