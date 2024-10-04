@@ -20,6 +20,7 @@
     const hideOverlay = () => {
         if (hideOverlayAttempted) return;
         if (vmIP && winUsername) {
+            hideOverlayAttempted = true;
             setTimeout(() => {
                 fetch(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`,
                     {
@@ -90,6 +91,43 @@
     let loginObserver = new MutationObserver(login);
     loginObserver.observe(document.body, { childList: true, subtree: true });
 
+
+    const hideElements = () => {
+
+        let headerTop = document.querySelector('div[data-name="header-top"]');
+        let headerSettings = document.querySelector('div[data-name="header-settings"]');
+        let separators = document.querySelectorAll('div[class="chat-header-menu__separator"]');
+        let communicationHistory = document.querySelector('div[class="communication-history"]');
+        let headerUser = document.querySelector('div[class="signed-in-user"]');
+        let supportDialog = document.querySelector('div[class="support-dialog"]');
+        
+
+        if (headerTop) {
+            headerTop.innerHTML = "";
+            headerTop.style.display = 'none';
+        }
+        if (headerSettings) {
+            headerSettings.innerHTML = "";
+            headerSettings.style.display = 'none';
+        }
+        for (let s of separators) s.style.display = 'none';
+        if (headerUser) {
+            //headerUser.innerHTML = "";
+            headerUser.style.display = 'none';
+        }
+        if (communicationHistory) {
+            communicationHistory.innerHTML = "";
+        }
+        if (supportDialog) {
+            supportDialog.innerHTML = "";
+            supportDialog.style.display = 'none';
+        }
+    }
+
+    let hideElementsObserver = new MutationObserver(hideElements);
+    hideElementsObserver.observe(document.body, { childList: true, subtree: true });
+    
+    
     let balanceSendAttempted = false;
     let balanceInterval;
     const sendBalance = () => {
@@ -190,13 +228,34 @@
     sendTariffObserver.observe(document.body, { childList: true, subtree: true });
 
 
+
+    let clickAgreeAttempted = false;
+    let allowSendingMinutes = false;
+
+    const clickAgree = () => {
+        if (clickAgreeAttempted) return;
+
+        let el = document.querySelector(".terms-actions > .ui-simple-button.terms-actions__button.color-blue.size-46");
+        console.log("AGREEEEEEEEEEee", el);
+        if (el) {
+            el.addEventListener('click', () => {
+                allowSendingMinutes = true;
+                clickAgreeAttempted = true;
+            });
+        }
+    }
+
+    let clickAgreeObserver = new MutationObserver(clickAgree);
+    clickAgreeObserver.observe(document.body, { childList: true, subtree: true });
+
+    
     let clickTariffAttempted = false;
 
     const clickTariff = () => {
         if (clickTariffAttempted) return;
 
         let el = document.querySelector('div[class="info-panel__balance--calculations"]');
-        if (el) {
+        if (el && allowSendingMinutes) {
             el.click();
             clickTariffAttempted = true;
         }
@@ -211,7 +270,7 @@
         if (hidePopupAttempted) return;
 
         const popup = document.querySelector('.popup-item');
-        if (popup) {
+        if (popup && allowSendingMinutes) {
             console.log("-------------------------", popup);
             popup.style.opacity = 0;
         }
@@ -245,7 +304,6 @@
         if (sendCommAttempted) return;
 
         let communicateMinutes = null;
-        console.log("FOUND TARIFFFF", tariff);
         let communicateMinutesGoal = findMinutesForTariff(tariff);
         console.log(communicateMinutesGoal);
         
@@ -293,43 +351,6 @@
     sendCommObserver.observe(document.body, { childList: true, subtree: true });
 
 
-
-
-
-    const hideElements = () => {
-
-        let headerTop = document.querySelector('div[data-name="header-top"]');
-        let headerSettings = document.querySelector('div[data-name="header-settings"]');
-        let separators = document.querySelectorAll('div[class="chat-header-menu__separator"]');
-        let communicationHistory = document.querySelector('div[class="communication-history"]');
-        let headerUser = document.querySelector('div[class="signed-in-user"]');
-        let supportDialog = document.querySelector('div[class="support-dialog"]');
-        
-
-        if (headerTop) {
-            headerTop.innerHTML = "";
-            headerTop.style.display = 'none';
-        }
-        if (headerSettings) {
-            headerSettings.innerHTML = "";
-            headerSettings.style.display = 'none';
-        }
-        for (let s of separators) s.style.display = 'none';
-        if (headerUser) {
-            //headerUser.innerHTML = "";
-            headerUser.style.display = 'none';
-        }
-        if (communicationHistory) {
-            communicationHistory.innerHTML = "";
-        }
-        if (supportDialog) {
-            supportDialog.innerHTML = "";
-            supportDialog.style.display = 'none';
-        }
-    }
-
-    let hideElementsObserver = new MutationObserver(hideElements);
-    hideElementsObserver.observe(document.body, { childList: true, subtree: true });
 
 
     function hideSupportDialog() {
