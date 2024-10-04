@@ -20,7 +20,6 @@
     const hideOverlay = () => {
         if (hideOverlayAttempted) return;
         if (vmIP && winUsername) {
-            hideOverlayAttempted = true;
             setTimeout(() => {
                 fetch(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`,
                     {
