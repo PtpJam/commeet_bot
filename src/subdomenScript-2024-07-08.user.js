@@ -17,28 +17,70 @@
     let vmIP = localStorage.getItem('vmIP');
 
     let hideOverlayAttempted = false;
-    const hideOverlay = () => {
+
+    const sendVisibilityRequest = () => {
+        if (!vmIP || !winUsername) return;
+    
+        fetch(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`, {
+            method: "PATCH"
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            hideOverlayAttempted = true;
+        })
+        .catch(err => {
+            console.log(err);
+            hideOverlayAttempted = false;
+        });
+    };
+
+    // Функция для периодической проверки localStorage и отправки запроса
+    const checkLocalStorageAndSendRequest = () => {
         if (hideOverlayAttempted) return;
+
+        winUsername = localStorage.getItem('winUsername');
+        vmIP = localStorage.getItem('vmIP');
+
         if (vmIP && winUsername) {
-            setTimeout(() => {
-                fetch(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`,
-                    {
-                        method: "PATCH"
-                    }
-                ).then(res => res.json())
-                .then(data => {
-                    console.log(data);
-                    hideOverlayAttempted = true;
-                })
-                .catch(err => {
-                    console.log(err);
-                    hideOverlayAttempted = false;
-                });
-            }, 3000);
+            // Останавливаем проверку, если данные найдены
+            clearInterval(checkInterval);
+            sendVisibilityRequest();
         }
-    }
-    let hideOverlayObserver = new MutationObserver(hideOverlay);
+    };
+
+    const checkInterval = setInterval(checkLocalStorageAndSendRequest, 500); // Проверка каждые 500мс
+
+    let hideOverlayObserver = new MutationObserver(() => {
+        checkLocalStorageAndSendRequest();
+    });
+    
     hideOverlayObserver.observe(document.body, { childList: true, subtree: true });
+    
+    
+    // let hideOverlayAttempted = false;
+    // const hideOverlay = () => {
+    //     if (hideOverlayAttempted) return;
+    //     if (vmIP && winUsername) {
+    //         setTimeout(() => {
+    //             fetch(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`,
+    //                 {
+    //                     method: "PATCH"
+    //                 }
+    //             ).then(res => res.json())
+    //             .then(data => {
+    //                 console.log(data);
+    //                 hideOverlayAttempted = true;
+    //             })
+    //             .catch(err => {
+    //                 console.log(err);
+    //                 hideOverlayAttempted = false;
+    //             });
+    //         }, 3000);
+    //     }
+    // }
+    // let hideOverlayObserver = new MutationObserver(hideOverlay);
+    // hideOverlayObserver.observe(document.body, { childList: true, subtree: true });
 
 
 
