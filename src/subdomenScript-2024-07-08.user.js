@@ -21,7 +21,7 @@
     const sendVisibilityRequest = () => {
         if (!vmIP || !winUsername) return;
     
-        fetch(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`, {
+        fetch(`https://ua.astrostar.chat/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`, {
             method: "PATCH"
         })
         .then(res => res.json())
@@ -63,7 +63,7 @@
     //     if (hideOverlayAttempted) return;
     //     if (vmIP && winUsername) {
     //         setTimeout(() => {
-    //             fetch(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`,
+    //             fetch(`https://ua.astrostar.chat/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`,
     //                 {
     //                     method: "PATCH"
     //                 }
@@ -179,7 +179,7 @@
 
         if (balance) {
             balanceSendAttempted = true;
-            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/balance/`;
+            const apiUrl = `https://ua.astrostar.chat/users/vm/${vmIP}/username/${winUsername}/balance/`;
             fetch(apiUrl, {
                 method: 'PATCH',
                 headers: {
@@ -200,7 +200,7 @@
                 clearInterval(balanceInterval);
             });
             balanceInterval = setInterval(() => {
-                const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/balance/`;
+                const apiUrl = `https://ua.astrostar.chat/users/vm/${vmIP}/username/${winUsername}/balance/`;
                 fetch(apiUrl, {
                     method: 'PATCH',
                     headers: {
@@ -241,7 +241,7 @@
         let el = document.querySelector('div[class="info-panel__balance--calculations"]');
         if (el) {
             sendTariffAttempted = true;
-            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/tariff/`;
+            const apiUrl = `https://ua.astrostar.chat/users/vm/${vmIP}/username/${winUsername}/tariff/`;
             fetch(apiUrl, {
                 method: 'PATCH',
                 headers: {
@@ -362,7 +362,7 @@
         console.log("!!!!!!!!!!!!!!!!!!!!!!")
         if (communicateMinutes && communicateMinutesGoal) {
             sendCommAttempted = true;
-            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/communication/`;
+            const apiUrl = `https://ua.astrostar.chat/users/vm/${vmIP}/username/${winUsername}/communication/`;
             fetch(apiUrl, {
                 method: 'PATCH',
                 headers: {
@@ -417,7 +417,7 @@
         if (cameraWindow && !isActive) {
             console.log("ACCTIIIIIIVE ++++++++++++++++++++++++++++");
             isActive = true;
-            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/vm/${vmIP}/username/${winUsername}`;
+            const apiUrl = `https://ua.astrostar.chat/activity/vm/${vmIP}/username/${winUsername}`;
             fetch(apiUrl, {
                 method: 'PATCH',
                 headers: {
@@ -439,7 +439,7 @@
         else if (!cameraWindow && isActive) {
             console.log("UNACTiIIIIVE ---------------------");
             isActive = false;
-            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/vm/${vmIP}/username/${winUsername}`;
+            const apiUrl = `https://ua.astrostar.chat/activity/vm/${vmIP}/username/${winUsername}`;
             fetch(apiUrl, {
                 method: 'PATCH',
                 headers: {
@@ -468,7 +468,7 @@
     
 
     window.addEventListener('beforeunload', () => {
-        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/activity/vm/${vmIP}/username/${winUsername}`;
+        const apiUrl = `https://ua.astrostar.chat/activity/vm/${vmIP}/username/${winUsername}`;
         fetch(apiUrl, {
             method: 'PATCH',
             headers: {

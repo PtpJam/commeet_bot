@@ -152,7 +152,7 @@
         }
 
         const earningsContainer = document.getElementById("earningInfoContainer");
-        const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/balance/`;
+        const apiUrl = `https://ua.astrostar.chat/users/vm/${vmIP}/username/${winUsername}/balance/`;
 
         fetch(apiUrl)
         .then(response => response.json())
@@ -184,7 +184,7 @@
             console.error('Error updating user balance:', error);
         });
         
-        const apiUrl2 = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/minutes/`;
+        const apiUrl2 = `https://ua.astrostar.chat/users/vm/${vmIP}/username/${winUsername}/minutes/`;
 
         fetch(apiUrl2)
         .then(response => {
@@ -216,7 +216,7 @@
         setInterval(() => {
             console.log("Обновление баланса пользователя и минут");
             const earningsContainer = document.getElementById("earningInfoContainer");
-            const apiUrl = `https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vm/${vmIP}/username/${winUsername}/balance/`;
+            const apiUrl = `https://ua.astrostar.chat/users/vm/${vmIP}/username/${winUsername}/balance/`;
             
             fetch(apiUrl)
             .then(response => response.json())

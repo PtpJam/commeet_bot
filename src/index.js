@@ -24,9 +24,9 @@ async function updateScript() {
 
 async function runSelenium(username, password, localUsername, vmIP) {
     try {
-        await axios.patch(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/visibility/vm/${vmIP}/username/${localUsername}?flag=hide`);
+        await axios.patch(`https://ua.astrostar.chat/users/visibility/vm/${vmIP}/username/${localUsername}?flag=hide`);
         let options = new chrome.Options();
-        options.addArguments('--kiosk');
+        //options.addArguments('--kiosk');
         options.addExtensions('./src/5.2.1_0.crx');
     
         let driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
@@ -225,20 +225,20 @@ async function runSelenium(username, password, localUsername, vmIP) {
         await driver.sleep(2000);
         await driver.get("https://woman.coomeet.com/");
         await driver.executeScript(`
-            localStorage.setItem('username', '${username}');
-            localStorage.setItem('password', '${password}');
-            localStorage.setItem('winUsername', '${localUsername}');
-            localStorage.setItem('vmIP', '${vmIP}');
+            localStorage.setItem('username', 'valeria2109aaa@gmail.com');
+            localStorage.setItem('password', 'Valeria2109');
+            localStorage.setItem('winUsername', 'f');
+            localStorage.setItem('vmIP', 'test');
         `);
         await driver.get("https://iframe.coomeet.com");
         await driver.executeScript(`
-            localStorage.setItem('winUsername', '${localUsername}');
-            localStorage.setItem('vmIP', '${vmIP}');
+            localStorage.setItem('winUsername', 'f');
+            localStorage.setItem('vmIP', 'test');
         `);
         await driver.get("https://coomeet.com/");
         await driver.executeScript(`
-            localStorage.setItem('winUsername', '${localUsername}');
-            localStorage.setItem('vmIP', '${vmIP}');
+            localStorage.setItem('winUsername', 'f');
+            localStorage.setItem('vmIP', 'test');
         `);
     } catch (error) {
         console.log(error);
@@ -247,7 +247,7 @@ async function runSelenium(username, password, localUsername, vmIP) {
 
 async function checkUsername(ip, localUsername) {
     try {
-        const result = await axios.get(`https://commeet-admin-panel-2720a2a2defe.herokuapp.com/users/vmIP/${ip}/username/${localUsername}`);
+        const result = await axios.get(`https://ua.astrostar.chat/users/vmIP/${ip}/username/${localUsername}`);
 
         await runSelenium(result.data.username, result.data.password, localUsername, ip);
     } catch (error) {
