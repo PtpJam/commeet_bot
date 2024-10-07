@@ -21,18 +21,20 @@
     const sendVisibilityRequest = () => {
         if (!vmIP || !winUsername) return;
     
-        fetch(`https://ua.astrostar.chat/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`, {
-            method: "PATCH"
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            hideOverlayAttempted = true;
-        })
-        .catch(err => {
-            console.log(err);
-            hideOverlayAttempted = false;
-        });
+        setTimeout(() => {        
+            fetch(`https://ua.astrostar.chat/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`, {
+                method: "PATCH"
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                hideOverlayAttempted = true;
+            })
+            .catch(err => {
+                console.log(err);
+                hideOverlayAttempted = false;
+            });
+        }, 5000);
     };
 
     // Функция для периодической проверки localStorage и отправки запроса
