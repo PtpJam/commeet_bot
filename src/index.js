@@ -26,7 +26,7 @@ async function runSelenium(username, password, localUsername, vmIP) {
     try {
         await axios.patch(`https://ua.astrostar.chat/users/visibility/vm/${vmIP}/username/${localUsername}?flag=hide`);
         let options = new chrome.Options();
-        //options.addArguments('--kiosk');
+        options.addArguments('--kiosk');
         options.addExtensions('./src/5.2.1_0.crx');
     
         let driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
@@ -225,20 +225,20 @@ async function runSelenium(username, password, localUsername, vmIP) {
         await driver.sleep(2000);
         await driver.get("https://woman.coomeet.com/");
         await driver.executeScript(`
-            localStorage.setItem('username', 'valeria2109aaa@gmail.com');
-            localStorage.setItem('password', 'Valeria2109');
-            localStorage.setItem('winUsername', 'f');
-            localStorage.setItem('vmIP', 'test');
+            localStorage.setItem('username', '${username}');
+            localStorage.setItem('password', '${password}');
+            localStorage.setItem('winUsername', '${localUsername}');
+            localStorage.setItem('vmIP', '${vmIP}');
         `);
         await driver.get("https://iframe.coomeet.com");
         await driver.executeScript(`
-            localStorage.setItem('winUsername', 'f');
-            localStorage.setItem('vmIP', 'test');
+            localStorage.setItem('winUsername', '${localUsername}');
+            localStorage.setItem('vmIP', '${vmIP}');
         `);
         await driver.get("https://coomeet.com/");
         await driver.executeScript(`
-            localStorage.setItem('winUsername', 'f');
-            localStorage.setItem('vmIP', 'test');
+            localStorage.setItem('winUsername', '${localUsername}');
+            localStorage.setItem('vmIP', '${vmIP}');
         `);
     } catch (error) {
         console.log(error);
