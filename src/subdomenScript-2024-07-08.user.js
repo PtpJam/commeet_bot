@@ -189,8 +189,7 @@
                 },
                 body: JSON.stringify({
                     balance: balance.textContent
-                }),
-                keepalive: true
+                })
             })
             .then(response => response.json())
             .then(data => {
@@ -210,8 +209,7 @@
                     },
                     body: JSON.stringify({
                         balance: balance.textContent
-                    }),
-                    keepalive: true
+                    })
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -251,8 +249,7 @@
                 },
                 body: JSON.stringify({
                     tariff: el.textContent
-                }),
-                keepalive: true
+                })
             })
             .then(response => response.json())
             .then(data => {
@@ -373,8 +370,7 @@
                 body: JSON.stringify({
                     communicateMinutes,
                     communicateMinutesGoal
-                }),
-                keepalive: true
+                })
             })
             .then(response => response.json())
             .then(data => {
@@ -427,8 +423,7 @@
                 },
                 body: JSON.stringify({
                     isOnline: true
-                }),
-                keepalive: true
+                })
             })
             .then(response => response.json())
             .then(data => {
@@ -449,8 +444,7 @@
                 },
                 body: JSON.stringify({
                     isOnline: false
-                }),
-                keepalive: true
+                })
             })
             .then(response => response.json())
             .then(data => {
