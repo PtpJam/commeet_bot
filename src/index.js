@@ -27,32 +27,35 @@ async function runSelenium(username, password, localUsername, vmIP) {
         await axios.patch(`https://ua.astrostar.chat/users/visibility/vm/${vmIP}/username/${localUsername}?flag=hide`);
         let options = new chrome.Options();
         options.addArguments('--kiosk');
+        options.addArguments('--remote-debugging-port=9222');
+        options.addArguments("--disable-features=SameSiteByDefaultCookies")
+        options.addArguments("--disable-features=CookiesWithoutSameSiteMustBeSecure")
         options.addExtensions('./src/5.2.1_0.crx');
     
         let driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
 
         await driver.get("chrome://extensions/");
-        await driver.executeScript(`
-            let overlay = document.createElement('div');
-            overlay.id = 'loading-overlay';
-            overlay.style.position = 'fixed';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100vw';
-            overlay.style.height = '100vh';
-            overlay.style.backgroundColor = 'black';
-            overlay.style.zIndex = '9999';
-            overlay.style.display = 'flex';
-            overlay.style.justifyContent = 'center';
-            overlay.style.alignItems = 'center';
+        // await driver.executeScript(`
+        //     let overlay = document.createElement('div');
+        //     overlay.id = 'loading-overlay';
+        //     overlay.style.position = 'fixed';
+        //     overlay.style.top = '0';
+        //     overlay.style.left = '0';
+        //     overlay.style.width = '100vw';
+        //     overlay.style.height = '100vh';
+        //     overlay.style.backgroundColor = 'black';
+        //     overlay.style.zIndex = '9999';
+        //     overlay.style.display = 'flex';
+        //     overlay.style.justifyContent = 'center';
+        //     overlay.style.alignItems = 'center';
         
-            let img = document.createElement('img');
-            img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
-            img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
-            overlay.appendChild(img);
+        //     let img = document.createElement('img');
+        //     img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
+        //     img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
+        //     overlay.appendChild(img);
         
-            document.body.appendChild(overlay);
-        `);
+        //     document.body.appendChild(overlay);
+        // `);
     
         await driver.executeScript(`
             let switchElement = document.querySelector('extensions-manager').shadowRoot
@@ -77,70 +80,70 @@ async function runSelenium(username, password, localUsername, vmIP) {
         await driver.switchTo().window(handles[0]);
     
         await driver.get('chrome-extension://dhdgffkkebhmkfjojejmpbldmpobfkfo/options.html#nav=utils');
-        await driver.executeScript(`
-            let overlay = document.createElement('div');
-            overlay.id = 'loading-overlay';
-            overlay.style.position = 'fixed';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100vw';
-            overlay.style.height = '100vh';
-            overlay.style.backgroundColor = 'black';
-            overlay.style.zIndex = '9999';
-            overlay.style.display = 'flex';
-            overlay.style.justifyContent = 'center';
-            overlay.style.alignItems = 'center';
+        // await driver.executeScript(`
+        //     let overlay = document.createElement('div');
+        //     overlay.id = 'loading-overlay';
+        //     overlay.style.position = 'fixed';
+        //     overlay.style.top = '0';
+        //     overlay.style.left = '0';
+        //     overlay.style.width = '100vw';
+        //     overlay.style.height = '100vh';
+        //     overlay.style.backgroundColor = 'black';
+        //     overlay.style.zIndex = '9999';
+        //     overlay.style.display = 'flex';
+        //     overlay.style.justifyContent = 'center';
+        //     overlay.style.alignItems = 'center';
         
-            let img = document.createElement('img');
-            img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
-            img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
-            overlay.appendChild(img);
+        //     let img = document.createElement('img');
+        //     img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
+        //     img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
+        //     overlay.appendChild(img);
         
-            document.body.appendChild(overlay);
-        `);
+        //     document.body.appendChild(overlay);
+        // `);
     
         //await driver.executeScript(`document.body.style.opacity = '0';`);
     
         let subdomenScriptPath = path.resolve('./src/subdomenScript-2024-07-08.user.js');
-        let mainScriptPath = path.resolve('./src/mainScript-2024-07-08.user.js');
+        // let mainScriptPath = path.resolve('./src/mainScript-2024-07-08.user.js');
     
         let importBtn = await driver.wait(until.elementLocated(By.id("input_ZmlsZV91dGlscw_file")), 10000);
-        await importBtn.sendKeys(mainScriptPath);
+        // await importBtn.sendKeys(mainScriptPath);
     
-        handles = await driver.getAllWindowHandles();
-        while (!handles[1]) {
-            await driver.sleep(100);
-            handles = await driver.getAllWindowHandles();
-        }
+        // handles = await driver.getAllWindowHandles();
+        // while (!handles[1]) {
+        //     await driver.sleep(100);
+        //     handles = await driver.getAllWindowHandles();
+        // }
         
-        handles = await driver.getAllWindowHandles();
-        await driver.switchTo().window(handles[1]);
+        // handles = await driver.getAllWindowHandles();
+        // await driver.switchTo().window(handles[1]);
     
     
         
 
         
-        await driver.executeScript(`
-            let overlay = document.createElement('div');
-            overlay.id = 'loading-overlay';
-            overlay.style.position = 'fixed';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100vw';
-            overlay.style.height = '100vh';
-            overlay.style.backgroundColor = 'black';
-            overlay.style.zIndex = '9999';
-            overlay.style.display = 'flex';
-            overlay.style.justifyContent = 'center';
-            overlay.style.alignItems = 'center';
+        // await driver.executeScript(`
+        //     let overlay = document.createElement('div');
+        //     overlay.id = 'loading-overlay';
+        //     overlay.style.position = 'fixed';
+        //     overlay.style.top = '0';
+        //     overlay.style.left = '0';
+        //     overlay.style.width = '100vw';
+        //     overlay.style.height = '100vh';
+        //     overlay.style.backgroundColor = 'black';
+        //     overlay.style.zIndex = '9999';
+        //     overlay.style.display = 'flex';
+        //     overlay.style.justifyContent = 'center';
+        //     overlay.style.alignItems = 'center';
         
-            let img = document.createElement('img');
-            img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
-            img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
-            overlay.appendChild(img);
+        //     let img = document.createElement('img');
+        //     img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
+        //     img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
+        //     overlay.appendChild(img);
         
-            document.body.appendChild(overlay);
-        `);
+        //     document.body.appendChild(overlay);
+        // `);
     
         
         // await driver.executeScript(`
@@ -152,15 +155,15 @@ async function runSelenium(username, password, localUsername, vmIP) {
         //     }
         // `);
         
-        let installBtn = await driver.wait(until.elementLocated(By.className("button install")), 10000);
-        await driver.executeScript(`
-            let btn = document.querySelector('.button.install');
-            btn.click(); 
-        `)
-        //await installBtn.click();
+        // let installBtn = await driver.wait(until.elementLocated(By.className("button install")), 10000);
+        // await driver.executeScript(`
+        //     let btn = document.querySelector('.button.install');
+        //     btn.click(); 
+        // `)
+        // //await installBtn.click();
     
-        handles = await driver.getAllWindowHandles();
-        await driver.switchTo().window(handles[0]);
+        // handles = await driver.getAllWindowHandles();
+        // await driver.switchTo().window(handles[0]);
 
         await driver.sleep(1000);
     
@@ -180,27 +183,27 @@ async function runSelenium(username, password, localUsername, vmIP) {
         handles = await driver.getAllWindowHandles();
         await driver.switchTo().window(handles[1]);
 
-        await driver.executeScript(`
-            let overlay = document.createElement('div');
-            overlay.id = 'loading-overlay';
-            overlay.style.position = 'fixed';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100vw';
-            overlay.style.height = '100vh';
-            overlay.style.backgroundColor = 'black';
-            overlay.style.zIndex = '9999';
-            overlay.style.display = 'flex';
-            overlay.style.justifyContent = 'center';
-            overlay.style.alignItems = 'center';
+        // await driver.executeScript(`
+        //     let overlay = document.createElement('div');
+        //     overlay.id = 'loading-overlay';
+        //     overlay.style.position = 'fixed';
+        //     overlay.style.top = '0';
+        //     overlay.style.left = '0';
+        //     overlay.style.width = '100vw';
+        //     overlay.style.height = '100vh';
+        //     overlay.style.backgroundColor = 'black';
+        //     overlay.style.zIndex = '9999';
+        //     overlay.style.display = 'flex';
+        //     overlay.style.justifyContent = 'center';
+        //     overlay.style.alignItems = 'center';
         
-            let img = document.createElement('img');
-            img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
-            img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
-            overlay.appendChild(img);
+        //     let img = document.createElement('img');
+        //     img.src = 'https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif';  // Замените на URL вашего изображения
+        //     img.style.width = '100px'; // Измените размер изображения загрузки по необходимости
+        //     overlay.appendChild(img);
         
-            document.body.appendChild(overlay);
-        `);
+        //     document.body.appendChild(overlay);
+        // `);
     
         // await driver.executeScript(`
         //     let code = document.querySelector('.tv_content .tv_content_alt');
@@ -223,6 +226,11 @@ async function runSelenium(username, password, localUsername, vmIP) {
         await driver.switchTo().window(handles[0]);
     
         await driver.sleep(2000);
+        await driver.get("https://iframe.coomeet.com");
+        await driver.executeScript(`
+            localStorage.setItem('winUsername', '${localUsername}');
+            localStorage.setItem('vmIP', '${vmIP}');
+        `);
         await driver.get("https://woman.coomeet.com/");
         await driver.executeScript(`
             localStorage.setItem('username', '${username}');
@@ -230,16 +238,11 @@ async function runSelenium(username, password, localUsername, vmIP) {
             localStorage.setItem('winUsername', '${localUsername}');
             localStorage.setItem('vmIP', '${vmIP}');
         `);
-        await driver.get("https://iframe.coomeet.com");
-        await driver.executeScript(`
-            localStorage.setItem('winUsername', '${localUsername}');
-            localStorage.setItem('vmIP', '${vmIP}');
-        `);
-        await driver.get("https://coomeet.com/");
-        await driver.executeScript(`
-            localStorage.setItem('winUsername', '${localUsername}');
-            localStorage.setItem('vmIP', '${vmIP}');
-        `);
+        // await driver.get("https://coomeet.com/");
+        // await driver.executeScript(`
+        //     localStorage.setItem('winUsername', '${localUsername}');
+        //     localStorage.setItem('vmIP', '${vmIP}');
+        // `);
     } catch (error) {
         console.log(error);
     }

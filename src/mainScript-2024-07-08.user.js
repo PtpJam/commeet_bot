@@ -213,41 +213,41 @@
         });
 
 
-        setInterval(() => {
-            console.log("Обновление баланса пользователя и минут");
-            const earningsContainer = document.getElementById("earningInfoContainer");
-            const apiUrl = `https://ua.astrostar.chat/users/vm/${vmIP}/username/${winUsername}/balance/`;
+        // setInterval(() => {
+        //     console.log("Обновление баланса пользователя и минут");
+        //     const earningsContainer = document.getElementById("earningInfoContainer");
+        //     const apiUrl = `http://localhost:3000/users/vm/${vmIP}/username/${winUsername}/balance/`;
             
-            fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                console.log('User balance updated successfully:', data.earningsToday, data.earningsWeek);
-                balanceToday = data.earningsToday;
-                balanceWeek = data.earningsWeek;
-                earningsGoalDay = data.dailyEarningsGoal;
-                earningsGoalWeek = data.weeklyEarningsGoal;
+        //     fetch(apiUrl)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         console.log('User balance updated successfully:', data.earningsToday, data.earningsWeek);
+        //         balanceToday = data.earningsToday;
+        //         balanceWeek = data.earningsWeek;
+        //         earningsGoalDay = data.dailyEarningsGoal;
+        //         earningsGoalWeek = data.weeklyEarningsGoal;
 
-                // Обновляем данные в DOM
-                earningsContainer.innerHTML = `
-                    <h1 style="font-size: 34px;">Заработано</h1>
-                    <p style="margin-top: 10px;">за сегодня: ${balanceToday}</p>
-                    <p style="margin-top: 10px;">за неделю: ${balanceWeek}</p>
-                `;
-                const userEarningsDay = balanceToday || 0;
-                const earningsPercentageDay = (userEarningsDay / earningsGoalDay) * 100;
-                const userEarningsWeek = balanceWeek || 0;
-                const earningsPercentageWeek = (userEarningsWeek / earningsGoalWeek) * 100;
+        //         // Обновляем данные в DOM
+        //         earningsContainer.innerHTML = `
+        //             <h1 style="font-size: 34px;">Заработано</h1>
+        //             <p style="margin-top: 10px;">за сегодня: ${balanceToday}</p>
+        //             <p style="margin-top: 10px;">за неделю: ${balanceWeek}</p>
+        //         `;
+        //         const userEarningsDay = balanceToday || 0;
+        //         const earningsPercentageDay = (userEarningsDay / earningsGoalDay) * 100;
+        //         const userEarningsWeek = balanceWeek || 0;
+        //         const earningsPercentageWeek = (userEarningsWeek / earningsGoalWeek) * 100;
 
                 
-                document.getElementById('progressFillDay').style.width = `${earningsPercentageDay}%`;
-                document.getElementById('progressTextDay').textContent = `Заработано: ${userEarningsDay} / ${earningsGoalDay}`;
-                document.getElementById('progressFillWeek').style.width = `${earningsPercentageWeek}%`;
-                document.getElementById('progressTextWeek').textContent = `Заработано: ${userEarningsWeek} / ${earningsGoalWeek}`;
-            })
-            .catch((error) => {
-                console.error('Error updating user balance:', error);
-            });
-        }, 120000);
+        //         document.getElementById('progressFillDay').style.width = `${earningsPercentageDay}%`;
+        //         document.getElementById('progressTextDay').textContent = `Заработано: ${userEarningsDay} / ${earningsGoalDay}`;
+        //         document.getElementById('progressFillWeek').style.width = `${earningsPercentageWeek}%`;
+        //         document.getElementById('progressTextWeek').textContent = `Заработано: ${userEarningsWeek} / ${earningsGoalWeek}`;
+        //     })
+        //     .catch((error) => {
+        //         console.error('Error updating user balance:', error);
+        //     });
+        // }, 120000);
     };
 
     window.onload = checkLocalStorageAndInit;

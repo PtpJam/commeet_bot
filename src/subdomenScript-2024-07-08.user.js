@@ -21,20 +21,20 @@
     const sendVisibilityRequest = () => {
         if (!vmIP || !winUsername) return;
     
-        setTimeout(() => {        
-            fetch(`https://ua.astrostar.chat/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`, {
-                method: "PATCH"
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                hideOverlayAttempted = true;
-            })
-            .catch(err => {
-                console.log(err);
-                hideOverlayAttempted = false;
-            });
-        }, 5000);
+        fetch(`https://ua.astrostar.chat/users/visibility/vm/${vmIP}/username/${winUsername}?flag=show`, {
+            method: "PATCH"
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            hideOverlayAttempted = true;
+        })
+        .catch(err => {
+            console.error(err);
+            hideOverlayAttempted = false;
+        });
+        // setTimeout(() => {        
+        // }, 5000);
     };
 
     // Функция для периодической проверки localStorage и отправки запроса
@@ -53,11 +53,11 @@
 
     const checkInterval = setInterval(checkLocalStorageAndSendRequest, 500); // Проверка каждые 500мс
 
-    let hideOverlayObserver = new MutationObserver(() => {
-        checkLocalStorageAndSendRequest();
-    });
+    // let hideOverlayObserver = new MutationObserver(() => {
+    //     checkLocalStorageAndSendRequest();
+    // });
     
-    hideOverlayObserver.observe(document.body, { childList: true, subtree: true });
+    // hideOverlayObserver.observe(document.body, { childList: true, subtree: true });
     
     
     // let hideOverlayAttempted = false;
@@ -172,12 +172,11 @@
     
     
     let balanceSendAttempted = false;
-    let balanceInterval;
+    // let balanceInterval;
     const sendBalance = () => {
         if (balanceSendAttempted) return;
 
         let balance = document.querySelector('div[class="info-panel__balance--moneys__usd"]');
-        console.log("Balance", balance);
 
         if (balance) {
             balanceSendAttempted = true;
@@ -198,29 +197,29 @@
             .catch((error) => {
                 console.error('Error updating user balance:', error);
                 balanceSendAttempted = false;
-                clearInterval(balanceInterval);
+                // clearInterval(balanceInterval);
             });
-            balanceInterval = setInterval(() => {
-                const apiUrl = `https://ua.astrostar.chat/users/vm/${vmIP}/username/${winUsername}/balance/`;
-                fetch(apiUrl, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        balance: balance.textContent
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('User balance updated successfully:', data);
-                })
-                .catch((error) => {
-                    console.error('Error updating user balance:', error);
-                    balanceSendAttempted = false;
-                    clearInterval(balanceInterval);
-                });
-            }, 60000);
+            // balanceInterval = setInterval(() => {
+            //     const apiUrl = `https://ua.astrostar.chat/users/vm/${vmIP}/username/${winUsername}/balance/`;
+            //     fetch(apiUrl, {
+            //         method: 'PATCH',
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         },
+            //         body: JSON.stringify({
+            //             balance: balance.textContent
+            //         })
+            //     })
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         console.log('User balance updated successfully:', data);
+            //     })
+            //     .catch((error) => {
+            //         console.error('Error updating user balance:', error);
+            //         balanceSendAttempted = false;
+            //         clearInterval(balanceInterval);
+            //     });
+            // }, 60000);
         }
 
     }
@@ -276,7 +275,6 @@
         if (clickAgreeAttempted) return;
 
         let el = document.querySelector(".terms-actions > .ui-simple-button.terms-actions__button.color-blue.size-46");
-        console.log("AGREEEEEEEEEEee", el);
         if (el) {
             el.addEventListener('click', () => {
                 allowSendingMinutes = true;
@@ -311,7 +309,6 @@
 
         const popup = document.querySelector('.popup-item');
         if (popup && allowSendingMinutes) {
-            console.log("-------------------------", popup);
             popup.style.opacity = 0;
         }
     }
@@ -332,7 +329,6 @@
                 const minutesCell = nextColumn.querySelector('.centered').nextElementSibling.querySelector('.tariffs__table--column__row--label');
 
                 const minutesValue = minutesCell ? minutesCell.textContent.trim() : null;
-                console.log('Количество минут для тарифа', tariff, ": ", minutesValue);
                 returned = minutesValue;
             }
         });
@@ -345,20 +341,14 @@
 
         let communicateMinutes = null;
         let communicateMinutesGoal = findMinutesForTariff(tariff);
-        console.log(communicateMinutesGoal);
         
         const lastColumn = document.querySelector('.tariffs__table--column:last-child');
         if (lastColumn) {
             const userValue = lastColumn.querySelectorAll('.tariffs__table--column__row.centered .tariffs__table--column__row--label')[1];
             communicateMinutes = userValue.textContent.trim();
-            console.log(communicateMinutes);
 
         }
 
-        console.log("!!!!!!!!!!!!!!!!!!!!!!")
-        console.log(communicateMinutes);
-        console.log(communicateMinutesGoal);
-        console.log("!!!!!!!!!!!!!!!!!!!!!!")
         if (communicateMinutes && communicateMinutesGoal) {
             sendCommAttempted = true;
             const apiUrl = `https://ua.astrostar.chat/users/vm/${vmIP}/username/${winUsername}/communication/`;
@@ -376,7 +366,6 @@
             .then(data => {
                 console.log('User communication minutes updated successfully:', data);
                 const closeEl = document.querySelector('.close-button');
-                console.log(closeEl);
                 closeEl.click();
             })
             .catch((error) => {
@@ -413,7 +402,6 @@
 
         console.log("Camera Window", cameraWindow);
         if (cameraWindow && !isActive) {
-            console.log("ACCTIIIIIIVE ++++++++++++++++++++++++++++");
             isActive = true;
             const apiUrl = `https://ua.astrostar.chat/activity/vm/${vmIP}/username/${winUsername}`;
             fetch(apiUrl, {
@@ -434,7 +422,6 @@
             });
         }
         else if (!cameraWindow && isActive) {
-            console.log("UNACTiIIIIVE ---------------------");
             isActive = false;
             const apiUrl = `https://ua.astrostar.chat/activity/vm/${vmIP}/username/${winUsername}`;
             fetch(apiUrl, {
