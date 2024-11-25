@@ -402,8 +402,7 @@
 
         if (container) {
             clearInterval(checkAreaInterval);
-            if (vmIP === "91.188.254.52" || vmIP === "146.103.38.61" || vmIP === "185.186.25.118")
-                showData();
+            showData();
         }
     };
 
