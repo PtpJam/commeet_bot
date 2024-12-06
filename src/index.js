@@ -3,24 +3,24 @@ import { By, Builder, until, Browser } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js';
 import axios from 'axios';
 import os from 'os'
-import simpleGit from 'simple-git';
+// import simpleGit from 'simple-git';
 
-const git = simpleGit();
+// const git = simpleGit();
 
-async function updateScript() {
-    try {
-        // Выполняем git pull для получения последних изменений
-        const update = await git.pull();
-        if (update && update.summary.changes) {
-            console.log('Script is updated');
-            process.exit(0); // Перезапуск процесса для применения изменений
-        } else {
-            console.log('No updates');
-        }
-    } catch (err) {
-        console.error('Error while updating script', err);
-    }
-}
+// async function updateScript() {
+//     try {
+//         // Выполняем git pull для получения последних изменений
+//         const update = await git.pull();
+//         if (update && update.summary.changes) {
+//             console.log('Script is updated');
+//             process.exit(0); // Перезапуск процесса для применения изменений
+//         } else {
+//             console.log('No updates');
+//         }
+//     } catch (err) {
+//         console.error('Error while updating script', err);
+//     }
+// }
 
 async function runSelenium(username, password, localUsername, vmIP) {
     try {
@@ -269,7 +269,7 @@ async function checkUsername(ip, localUsername) {
     }
 }
 
-await updateScript();
+// await updateScript();
 
 const response = await axios.get('https://api.ipify.org?format=json');
 const ipAddress = response.data.ip;
